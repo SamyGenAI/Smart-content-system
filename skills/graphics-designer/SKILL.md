@@ -11,7 +11,7 @@ A platform writer calls this for one visual, after the copy for that asset exist
 
 This skill chooses what the graphic says. It does not replace the design system.
 
-`infographics-designer` stays the skill that builds a 1080×1350 LinkedIn infographic in JSX. `carousel-designer` builds the carousel. `newsletter-thumbnail-designer` builds the 420×300 email thumbnail. `youtube-thumbnail` is a different surface (a YouTube still) and is not this skill. `flowchart` builds an editable process map. Read the content brief, `$DESIGN_SYSTEM/DESIGN.md`, and the positioning, ICP and voice pages in `$VAULT/raw/me/` before choosing.
+`infographics-designer` stays the skill that builds a 1080×1350 LinkedIn infographic in JSX. `carousel-designer` builds the carousel. `newsletter-thumbnail-designer` builds the 420×300 email thumbnail. `youtube-thumbnail` is a different surface (a YouTube still) and is not this skill. Read the content brief, `$DESIGN_SYSTEM/DESIGN.md`, and the positioning, ICP and voice pages in `$VAULT/raw/me/` before choosing.
 
 Establish the information relationship before choosing a composition: a thesis, sequence, comparison, hierarchy, evidence or reflection. Keep the copy faithful to its source. A missing number or screenshot is not permission to invent one.
 
@@ -24,7 +24,6 @@ Use dimensions from the requested destination or supplied brief. Verify current 
 | LinkedIn infographic | `infographics-designer` | 1080×1350 | `pnpm dev` in `$DESIGN_SYSTEM`, Export → Download PNG. Or `GET /api/export/png?mode=<modeKey>` with the dev server up |
 | LinkedIn carousel | `carousel-designer` | 1080×1350 × N | `pnpm dev` in `$DESIGN_SYSTEM`, Export → Download PDF. Or `GET /api/export/pdf?mode=<modeKey>` |
 | Newsletter thumbnail | `newsletter-thumbnail-designer` | 420×300 | `pnpm dev` in `$DESIGN_SYSTEM`, Export → Download PNG. Or `GET /api/export/png?mode=<modeKey>` |
-| Process map or funnel | `flowchart` | Excalidraw scene | The editor's own export, saved beside the `.excalidraw` |
 | YouTube thumbnail | `youtube-thumbnail` | No canvas in Design OS yet | `thumbnail-brief.md` only, until a 1280×720 mode exists |
 
 Follow that skill's rules, including the design-brief gate for infographics, carousels and slides. Register the JSX in `$DESIGN_SYSTEM/src/modes.js` and `$DESIGN_SYSTEM/src/App.jsx` the way that skill says. Save the export into `$VAULT/outputs/agent/design/<title>/`. Do not call `render.py`.

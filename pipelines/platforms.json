@@ -122,7 +122,7 @@
           "handsTo": {
             "skill": "graphics-designer",
             "canvas": "Cover and inline figures",
-            "render": "graphics-designer routes each figure to infographics-designer, carousel-designer, or flowchart. Save the cover and numbered inline images in $VAULT/outputs/agent/design/<title>/ as x-01-cover.png, x-02-…. Do not call render.py."
+            "render": "graphics-designer routes each figure to infographics-designer or carousel-designer. Save the cover and numbered inline images in $VAULT/outputs/agent/design/<title>/ as x-01-cover.png, x-02-…. Do not call render.py."
           }
         },
         {

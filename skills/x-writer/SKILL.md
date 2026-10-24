@@ -55,7 +55,6 @@ An Article figure is placed where it explains the next step. `graphics-designer`
 |---|---|---|
 | One graphic | `infographics-designer` | `$VAULT/outputs/agent/design/<title>/x-01-cover.png`, then `x-02-…` in article order. PNG via Export or `GET /api/export/png?mode=<modeKey>` |
 | Multi-slide | `carousel-designer` | PDF via Export or `GET /api/export/pdf?mode=<modeKey>` |
-| Process | `flowchart` | `$VAULT/outputs/agent/design/<title>/*.excalidraw` |
 
 A caption has to add information. Omit it when the figure is clear. `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart Creator design system (default `../smart-creator-design-system`): Design OS builds and renders every visual there. Do not call `render.py`.
 

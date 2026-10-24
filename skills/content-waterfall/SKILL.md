@@ -132,7 +132,7 @@ Only for the asset just drafted, and only when he wants it. Read `handsTo` in `p
 | YouTube thumbnail | `youtube-thumbnail` | `thumbnail-brief.md` only, 1280×720 |
 | LinkedIn infographic | `infographics-designer` | 1080×1350 PNG |
 | LinkedIn carousel | `carousel-designer` | 1080×1350 PDF |
-| X figure or process map | `graphics-designer` or `flowchart` | PNG, PDF or `.excalidraw` |
+| X figure | `graphics-designer` | PNG or PDF |
 
 `pnpm dev` in `$DESIGN_SYSTEM`, then the preview toolbar Export menu. With the server up: `GET /api/export/png?mode=<modeKey>`, `GET /api/export/pdf?mode=<modeKey>`, `GET /api/export/pptx?mode=<modeKey>`, `GET /api/export/gif?mode=<modeKey>` for an animated infographic. Do not call `render.py`. Save the file in `$VAULT/outputs/agent/design/<title>/`.
 

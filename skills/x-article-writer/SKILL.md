@@ -32,7 +32,7 @@ For a supplied X URL, read the actual post and any linked Article, including its
 
 ## Graphics
 
-Place each graphic where it explains the next step of the argument. A caption must add information; omit it when the figure explains itself. Use `graphics-designer` (then the design-system skill it names) or `flowchart` for new figures and keep the editable source. For the X handoff, export a cover and full-resolution inline images numbered in article order, with a short placement guide, into `$VAULT/outputs/agent/design/<title>/`.
+Place each graphic where it explains the next step of the argument. A caption must add information; omit it when the figure explains itself. Use `graphics-designer` (then the design-system skill it names) for new figures and keep the editable source. For the X handoff, export a cover and full-resolution inline images numbered in article order, with a short placement guide, into `$VAULT/outputs/agent/design/<title>/`.
 
 Render a design-system graphic with `pnpm dev` in `$DESIGN_SYSTEM` and the preview toolbar Export menu (PNG for an infographic, PDF for a carousel). With the dev server up those are `GET /api/export/png?mode=<modeKey>` and `GET /api/export/pdf?mode=<modeKey>`. Save exports in `$VAULT/outputs/agent/design/<title>/`. Do not call `render.py`.
 

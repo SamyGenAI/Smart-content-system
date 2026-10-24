@@ -42,7 +42,6 @@ Public numbers, results and testimonials come only from `$VAULT/raw/me/proof.md`
 | `x-article-writer`, `x-planner` | X Article and the weekly X plan |
 | `voice-calibration` | Calibrate Samy's voice from his own edits |
 | `graphics-designer`, `youtube-thumbnail` | Design briefs: what a graphic or thumbnail says, before Design OS builds it |
-| `flowchart` | Editable Excalidraw process maps |
 
 `graphics-designer` decides the graphic and hands the build to a Design OS skill (`infographics-designer`, `carousel-designer`, `newsletter-thumbnail-designer`). `youtube-thumbnail` is a 1280×720 brief. `newsletter-thumbnail-designer` is the 420×300 email image. Do not swap them.
 

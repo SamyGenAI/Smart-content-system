@@ -48,7 +48,7 @@ Only when `next` names `thumbnail`, or Samy asks for it. Skill: `newsletter-thum
 
 Write the brief first: `thumbnail-brief.md` in the newsletter folder (title, one visual idea, what not to do). `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart Creator design system (default `../smart-creator-design-system`): Design OS builds and renders every visual there. Render with `pnpm dev` in `$DESIGN_SYSTEM`, then Export → Download PNG. With the server up: `GET /api/export/png?mode=<modeKey>`. Save `$VAULT/outputs/agent/design/<title>/newsletter-thumbnail.png`. Do not call `render.py`.
 
-A diagram inside the issue uses `flowchart`, or `graphics-designer` then `infographics-designer` when it is a LinkedIn-shaped graphic. Save that export in `$VAULT/outputs/agent/design/<title>/` under its own name. Do not treat it as the email thumbnail.
+A graphic inside the issue uses `graphics-designer`, then the Design OS skill it names. Save that export in `$VAULT/outputs/agent/design/<title>/` under its own name. Do not treat it as the email thumbnail.
 
 ## Deliver
 

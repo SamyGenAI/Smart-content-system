@@ -62,7 +62,7 @@ Agents save in `$VAULT/outputs/agent/content/<channel>/<title>/`. A later run st
 
 ## 4. Visuals for that asset
 
-`platforms.json` names the design skill, the canvas and the render for the asset just drafted. Do the handoff only when `handsTo` is set and he wants the visual. Content OS writes the brief next to the draft. `graphics-designer` chooses a graphic. `flowchart` builds a process map. Design OS builds it in `$DESIGN_SYSTEM`. Rendered images go in `$VAULT/outputs/agent/design/<title>/`.
+`platforms.json` names the design skill, the canvas and the render for the asset just drafted. Do the handoff only when `handsTo` is set and he wants the visual. Content OS writes the brief next to the draft. `graphics-designer` chooses a graphic. Design OS builds it in `$DESIGN_SYSTEM`. Rendered images go in `$VAULT/outputs/agent/design/<title>/`.
 
 The YouTube thumbnail is a brief until a 1280×720 canvas exists. Do not use the newsletter thumbnail for it. Notion stage for design, and for filming he does himself: **Design or Filming**.
 
