@@ -43,7 +43,7 @@ Samy names the idea, or stage 0 of the skill brings him 3 to 5 ideas with proof 
 
 ## 2. Research
 
-Read [`vault.md`](vault.md), then `$VAULT/CLAUDE.md`, `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Read his past pieces in `$VAULT/outputs/human/content/`. Ground the brief in `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Check every product or market claim at its source.
+Read [`vault.md`](vault.md), then `$VAULT/AGENTS.md`, `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Read his past pieces in `$VAULT/outputs/human/content/`. Ground the brief in `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Check every product or market claim at its source.
 
 Write `brief.md` in the newsletter agent folder from [`skills/content-waterfall/references/brief-template.md`](../skills/content-waterfall/references/brief-template.md) only when that file is missing. Notion stage: **Research / Scripting**.
 

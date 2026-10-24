@@ -624,7 +624,7 @@ function commandPublish(vault, title, args) {
 
 function commandPaths(vault, title) {
   const reads = [
-    'CLAUDE.md',
+    'AGENTS.md',
     'raw/me/voice.md',
     'raw/me/proof.md',
     'raw/me/offer.md',

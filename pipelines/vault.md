@@ -17,7 +17,7 @@ If the vault is missing, stop. Ask Samy to clone the vault beside this repo, or 
 
 ## Layout
 
-Karpathy's LLM-wiki layout. The schema is `$VAULT/CLAUDE.md`. Follow its Content Workflow.
+Karpathy's LLM-wiki layout. The schema is `$VAULT/AGENTS.md`. Follow its Content Workflow.
 
 | Path | Rule |
 |---|---|

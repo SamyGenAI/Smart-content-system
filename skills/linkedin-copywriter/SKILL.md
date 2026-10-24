@@ -3,13 +3,13 @@ name: linkedin-copywriter
 description: Draft or edit one LinkedIn post using the author's context, writing samples, factual sources and intended funnel job.
 ---
 
-Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/CLAUDE.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<channel>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save the post to `$VAULT/outputs/agent/content/linkedin/<title>/`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
+Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<channel>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save the post to `$VAULT/outputs/agent/content/linkedin/<title>/`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
 
 Called by `linkedin-writer` for the post body. Not a pipeline. If a markdown file is already in the draft folder, that file is the post. Do not add a second copy.
 
 # Write a LinkedIn post
 
-Read `CLAUDE.md`, `$VAULT/wiki/index.md`, `$VAULT/wiki/content-os.md`, `$VAULT/raw/me/proof.md`, `$VAULT/raw/me/voice.md`, `$VAULT/raw/me/offer.md` and the ICP and positioning pages beside them. Read the full source behind the central claim.
+Read `AGENTS.md`, `$VAULT/wiki/index.md`, `$VAULT/wiki/content-os.md`, `$VAULT/raw/me/proof.md`, `$VAULT/raw/me/voice.md`, `$VAULT/raw/me/offer.md` and the ICP and positioning pages beside them. Read the full source behind the central claim.
 
 ## Find the post
 

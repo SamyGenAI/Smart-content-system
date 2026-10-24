@@ -23,7 +23,7 @@ Do not copy vault files into this repo. Do not edit the vault's `raw/` or `outpu
 | `skills/` | Platform writers, the waterfall, and the brief skills. Each skill is a folder with `SKILL.md`. |
 | `pipelines/` | The content waterfall, `platforms.json` and `vault.md`. |
 | `scripts/content-waterfall.mjs` | Reads the vault, names the next asset, records publish dates. Never posts. |
-| `CLAUDE.md`, `AGENTS.md` | Rules for Claude Code and Codex. |
+| `AGENTS.md` | Rules for Claude Code, Codex and Cursor. |
 
 ## Where things go in the vault
 

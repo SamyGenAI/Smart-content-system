@@ -1,4 +1,4 @@
-# Smart Creator Content OS — Rules for Codex
+# Smart Creator Content OS — Rules for coding agents
 
 ## What this repo is
 
@@ -8,7 +8,7 @@ Visuals are not built here. **Design OS** is the [Smart Creator design system](h
 
 ## Do these in order
 
-1. **Read the vault first.** The private vault is [Samy-SmartOS](https://github.com/SamyGenAI/Samy-SmartOS). Its path is `VAULT_PATH` in `.env`, default `../Samy-SmartOS`. Rules: [`pipelines/vault.md`](pipelines/vault.md). Read `$VAULT/CLAUDE.md` and follow its **Content Workflow**. Voice, proof and offer are in `$VAULT/raw/me/`.
+1. **Read the vault first.** The private vault is [Samy-SmartOS](https://github.com/SamyGenAI/Samy-SmartOS). Its path is `VAULT_PATH` in `.env`, default `../Samy-SmartOS`. Rules: [`pipelines/vault.md`](pipelines/vault.md). Read `$VAULT/AGENTS.md` and follow its **Content Workflow**. Voice, proof and offer are in `$VAULT/raw/me/`.
 2. **Write only to `$VAULT/outputs/agent/`.** Drafts and briefs go in `$VAULT/outputs/agent/content/<channel>/<title>/`. `$VAULT/outputs/human/` is Samy's polished, final version: read it as his past posts and the examples to match, never write it. `$VAULT/raw/` is read-only.
 3. **Run the one waterfall.** The only content pipeline is [`pipelines/content-waterfall.md`](pipelines/content-waterfall.md). Four writers, in order: newsletter, YouTube, LinkedIn, X. One asset at a time.
 4. **Hand visuals to Design OS.** Write the brief next to the draft. The build runs in `$DESIGN_SYSTEM` (`DESIGN_SYSTEM_PATH`, default `../smart-creator-design-system`) with its own skills and rules. Rendered files go in `$VAULT/outputs/agent/design/<title>/`.
