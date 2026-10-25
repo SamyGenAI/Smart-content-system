@@ -6,7 +6,7 @@ description: Monitor what watched competitors and creators are posting on Linked
 # Social Listening
 
 What the watchlist is **saying**. For what they are **doing** (hiring, funding,
-launching), use `skills/intent-signals`.
+launching), that is `intent-signals` in the GTM OS, not this repo.
 
 Output in chat is **Top Signals, grouped by source** — up to 5 posts per source
 ranked by relevance to the user's business and recency, not engagement — with
@@ -35,7 +35,12 @@ Who to watch: `context/signals/watchlist.md`, under `## LinkedIn` / `## X` /
 `## Reddit` / `## YouTube` / `## Web` / `## Gmail`.
 What counts as a signal: `context/signals/signals.md` if it exists — use it to
 judge relevance and ordering. If missing, use judgement and say once that
-filling it in sharpens future runs.
+filling it in sharpens future runs. Whether a signal fits the business is
+`## ICP` in `$VAULT/raw/me/offer.md` (the vault, `VAULT_PATH` in `.env`). Do not paste that heading into the watchlist.
+
+Paid sources (LinkedIn, a keyed web backend, YouTube when Gemini is on)
+need `--dry-run` or `--estimate` first, then `--confirm`. Reddit, keyless web,
+and YouTube without Gemini are free. Nothing posts or replies.
 
 ## Step 1 — Ask first
 
@@ -551,5 +556,5 @@ not close with a second round of it.
 ## Next
 
 ```
-Read skills/intent-signals/SKILL.md and check buying signals for my watchlist.
+Read skills/content-research/SKILL.md and research the strongest signal into a brief.
 ```
