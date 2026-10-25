@@ -1,8 +1,8 @@
 {
-  "name": "smart-creator-content-system",
+  "name": "smart-content-system",
   "private": true,
   "type": "module",
-  "description": "Content OS for The Smart Creator: platform writers, the content waterfall, and design briefs.",
+  "description": "Content OS of the Smart OS: platform writers, the content waterfall, and design briefs.",
   "scripts": {
     "waterfall": "node scripts/content-waterfall.mjs",
     "waterfall:check": "node scripts/content-waterfall.mjs self-test"

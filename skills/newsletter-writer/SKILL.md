@@ -46,7 +46,7 @@ Edit for new information per paragraph. Preserve his phrasing. Remove inflated t
 
 Only when `next` names `thumbnail`, or Samy asks for it. Skill: `newsletter-thumbnail-designer`. Canvas: 420×300. That skill is not the YouTube thumbnail.
 
-Write the brief first: `thumbnail-brief.md` in the newsletter folder (title, one visual idea, what not to do). `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart Creator design system (default `../smart-creator-design-system`): Design OS builds and renders every visual there. Render with `pnpm dev` in `$DESIGN_SYSTEM`, then Export → Download PNG. With the server up: `GET /api/export/png?mode=<modeKey>`. Save `$VAULT/outputs/agent/design/<title>/newsletter-thumbnail.png`. Do not call `render.py`.
+Write the brief first: `thumbnail-brief.md` in the newsletter folder (title, one visual idea, what not to do). `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. Render with `pnpm dev` in `$DESIGN_SYSTEM`, then Export → Download PNG. With the server up: `GET /api/export/png?mode=<modeKey>`. Save `$VAULT/outputs/agent/design/<title>/newsletter-thumbnail.png`. Do not call `render.py`.
 
 A graphic inside the issue uses `graphics-designer`, then the Design OS skill it names. Save that export in `$VAULT/outputs/agent/design/<title>/` under its own name. Do not treat it as the email thumbnail.
 

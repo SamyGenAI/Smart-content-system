@@ -52,7 +52,7 @@ Follow the arc in `carousel-designer`: cover, 2–3 story slides, context, steps
 | Infographic for the post | The post needs a graphic, not by default | `graphics-designer`, then `infographics-designer` | `$VAULT/outputs/agent/design/<title>/linkedin-infographic.png` (1080×1350). `pnpm dev` in `$DESIGN_SYSTEM`, Export → Download PNG, or `GET /api/export/png?mode=<modeKey>` |
 | Carousel | `carousel.md` is approved | `carousel-designer` | `$VAULT/outputs/agent/design/<title>/linkedin-carousel.pdf`. Export → Download PDF, or `GET /api/export/pdf?mode=<modeKey>` |
 
-Design skills live in `$DESIGN_SYSTEM`. `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart Creator design system (default `../smart-creator-design-system`): Design OS builds and renders every visual there. Do not call `render.py`. Register JSX the way the design skill says.
+Design skills live in `$DESIGN_SYSTEM`. `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. Do not call `render.py`. Register JSX the way the design skill says.
 
 ## Deliver
 

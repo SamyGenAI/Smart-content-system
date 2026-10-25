@@ -1,17 +1,17 @@
-# Smart Creator Content OS — Rules for coding agents
+# Smart Content System — Rules for coding agents
 
 ## What this repo is
 
-This repo is Samy's **Content OS**: the copywriting skills for each platform, the content waterfall, and the design briefs for The Smart Creator (newsletter, YouTube, LinkedIn, X). Grok Bot orchestrates. The Head of Content bot runs this OS. Claude Code, Codex, or Cursor do the work.
+This repo is Samy's **Content OS**: the copywriting skills for each platform, the content waterfall, and the design briefs for Samy's content: The Smart Creator newsletter, YouTube, LinkedIn and X. Grok Bot orchestrates. The Head of Content bot runs this OS. Claude Code, Codex, or Cursor do the work.
 
-Visuals are not built here. **Design OS** is the [Smart Creator design system](https://github.com/SamyGenAI/Smart-creator-design-system) repo: Content OS writes the brief, Design OS builds and renders the asset.
+Visuals are not built here. **Design OS** is the [Smart design system](https://github.com/SamyGenAI/Smart-design-system) repo: Content OS writes the brief, Design OS builds and renders the asset.
 
 ## Do these in order
 
 1. **Read the vault first.** The private vault is [Samy-SmartOS](https://github.com/SamyGenAI/Samy-SmartOS). Its path is `VAULT_PATH` in `.env`, default `../Samy-SmartOS`. Rules: [`pipelines/vault.md`](pipelines/vault.md). Read `$VAULT/AGENTS.md` and follow its **Content Workflow**. Voice, proof and offer are in `$VAULT/raw/me/`.
 2. **Write only to `$VAULT/outputs/agent/`.** Drafts and briefs go in `$VAULT/outputs/agent/content/<channel>/<title>/`. `$VAULT/outputs/human/` is Samy's polished, final version: read it as his past posts and the examples to match, never write it. `$VAULT/raw/` is read-only.
 3. **Run the one waterfall.** The only content pipeline is [`pipelines/content-waterfall.md`](pipelines/content-waterfall.md). Four writers, in order: newsletter, YouTube, LinkedIn, X. One asset at a time.
-4. **Hand visuals to Design OS.** Write the brief next to the draft. The build runs in `$DESIGN_SYSTEM` (`DESIGN_SYSTEM_PATH`, default `../smart-creator-design-system`) with its own skills and rules. Rendered files go in `$VAULT/outputs/agent/design/<title>/`.
+4. **Hand visuals to Design OS.** Write the brief next to the draft. The build runs in `$DESIGN_SYSTEM` (`DESIGN_SYSTEM_PATH`, default `../smart-design-system`) with its own skills and rules. Rendered files go in `$VAULT/outputs/agent/design/<title>/`.
 
 | Order | Writer | Formats |
 |---|---|---|

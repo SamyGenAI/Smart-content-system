@@ -34,7 +34,7 @@ export function resolveVaultPath() {
 
 export function resolveDesignSystemPath() {
   loadEnvFile()
-  const configured = process.env.DESIGN_SYSTEM_PATH?.trim() || '../smart-creator-design-system'
+  const configured = process.env.DESIGN_SYSTEM_PATH?.trim() || '../smart-design-system'
   return path.resolve(REPO_ROOT, configured)
 }
 

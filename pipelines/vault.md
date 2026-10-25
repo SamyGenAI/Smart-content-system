@@ -5,7 +5,7 @@ The private vault is [Samy-SmartOS](https://github.com/SamyGenAI/Samy-SmartOS). 
 | Setting | Meaning |
 |---|---|
 | `VAULT_PATH` | Absolute path, or a path relative to this repo. Default: `../Samy-SmartOS`. Set it in `.env` (see `.env.example`). |
-| `DESIGN_SYSTEM_PATH` | Checkout of the [Smart Creator design system](https://github.com/SamyGenAI/Smart-creator-design-system) (Design OS). Default: `../smart-creator-design-system`. Every visual is built and rendered there. |
+| `DESIGN_SYSTEM_PATH` | Checkout of the [Smart design system](https://github.com/SamyGenAI/Smart-design-system) (Design OS). Default: `../smart-design-system`. Every visual is built and rendered there. |
 
 `$VAULT` in the skills means the vault checkout. `$DESIGN_SYSTEM` means the design system checkout. Resolve them before reading or writing:
 
@@ -24,7 +24,7 @@ Karpathy's LLM-wiki layout. The schema is `$VAULT/AGENTS.md`. Follow its Content
 | `$VAULT/raw/` | Immutable source. Read-only from this repo. Never create, edit, move, or delete anything under `raw/`. |
 | `$VAULT/raw/me/voice.md` | How Samy writes. |
 | `$VAULT/raw/me/proof.md` | The only place public numbers, results, and testimonials come from, along with wiki pages that cite a source. |
-| `$VAULT/raw/me/offer.md` | The Smart Operating System offer. |
+| `$VAULT/raw/me/offer.md` | The Smart OS offer. |
 | `$VAULT/raw/ideas/` | Idea inbox. Read it. Do not file drafts here. |
 | `$VAULT/raw/content/` | Content research. Read it. Do not edit it. |
 | `$VAULT/wiki/index.md` | Read this first when looking for topic pages. |

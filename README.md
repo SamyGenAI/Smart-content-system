@@ -1,8 +1,8 @@
-# Smart Creator Content OS
+# Smart Content System
 
-The Content OS of Samy's Smart Operating System. Platform copywriting skills, one content waterfall, and the design briefs for **The Smart Creator**: newsletter, YouTube, LinkedIn and X. Grok Bot orchestrates. Claude Code, Codex, or Cursor do the work.
+The Content OS of Samy's Smart OS. Platform copywriting skills, one content waterfall, and the design briefs for Samy's content: **The Smart Creator** newsletter, YouTube, LinkedIn and X. Grok Bot orchestrates. Claude Code, Codex, or Cursor do the work.
 
-Visuals are built by Design OS, the [Smart Creator design system](https://github.com/SamyGenAI/Smart-creator-design-system). This repo writes the brief, Design OS renders it.
+Visuals are built by Design OS, the [Smart design system](https://github.com/SamyGenAI/Smart-design-system). This repo writes the brief, Design OS renders it.
 
 ## Setup
 
@@ -10,7 +10,7 @@ Clone the vault and the design system beside this repo, or set their paths in `.
 
 ```bash
 git clone https://github.com/SamyGenAI/Samy-SmartOS.git ../Samy-SmartOS
-git clone https://github.com/SamyGenAI/Smart-creator-design-system.git ../smart-creator-design-system
+git clone https://github.com/SamyGenAI/Smart-design-system.git ../smart-design-system
 cp .env.example .env
 ```
 
