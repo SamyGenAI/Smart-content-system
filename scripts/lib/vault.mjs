@@ -4,7 +4,19 @@ import { fileURLToPath } from 'url'
 
 const LIB_DIR = path.dirname(fileURLToPath(import.meta.url))
 export const REPO_ROOT = path.resolve(LIB_DIR, '../..')
-export const CHANNELS = ['newsletter', 'youtube', 'linkedin', 'x']
+
+/**
+ * The vault layout: outputs/{agent,human}/content/<Platform>/<Stage>/<title>/.
+ * folder: the platform folder name in the vault. stages: its stage folders, in order.
+ */
+export const PLATFORMS = {
+  newsletter: { folder: 'Newsletter', stages: ['Research', 'Text', 'Design brief'] },
+  youtube: { folder: 'Youtube', stages: ['Research', 'Script', 'Design brief'] },
+  'youtube-short': { folder: 'Youtube short', stages: ['Research', 'Script', 'Design brief'] },
+  linkedin: { folder: 'Linkedin', stages: ['Research', 'Text', 'Design brief'] },
+  x: { folder: 'X', stages: ['Research', 'Text', 'Design brief'] },
+}
+export const CHANNELS = Object.keys(PLATFORMS)
 /** agent: what the agents write. human: Samy's polished, final version. Read-only here. */
 export const SIDES = ['agent', 'human']
 
@@ -57,7 +69,14 @@ export function assertChannel(channel) {
   return channel
 }
 
-/** Refuse any write outside outputs/agent/content/<channel>/. raw/ and outputs/human/ stay read-only. */
+export function assertStage(channel, stage) {
+  if (!PLATFORMS[channel].stages.includes(stage)) {
+    throw new Error(`Unknown stage "${stage}" for ${channel}. Use one of: ${PLATFORMS[channel].stages.join(', ')}.`)
+  }
+  return stage
+}
+
+/** Refuse any write outside outputs/agent/content/<Platform>/<Stage>/<title>/. raw/ and outputs/human/ stay read-only. */
 export function assertContentWrite(vaultRoot, target) {
   const vault = path.resolve(vaultRoot)
   const abs = path.resolve(target)
@@ -73,14 +92,23 @@ export function assertContentWrite(vaultRoot, target) {
   if (parts[0] !== 'outputs' || parts[1] !== 'agent' || parts[2] !== 'content') {
     throw new Error('Refusing to write outside outputs/agent/content/.')
   }
-  if (!CHANNELS.includes(parts[3])) throw new Error(`Unknown channel "${parts[3]}".`)
-  if (!parts[4]) throw new Error('Refusing to write the channel folder itself.')
+  const channel = CHANNELS.find((id) => PLATFORMS[id].folder === parts[3])
+  if (!channel) throw new Error(`Unknown platform folder "${parts[3]}".`)
+  if (!PLATFORMS[channel].stages.includes(parts[4])) {
+    throw new Error(`Unknown stage folder "${parts[4]}" for ${PLATFORMS[channel].folder}.`)
+  }
+  if (!parts[5] || parts.length < 7) throw new Error('Refusing to write outside a piece folder.')
   return abs
 }
 
-export function contentDir(vaultRoot, channel, side, folderName) {
+export function stageRoot(vaultRoot, channel, side, stage) {
   if (!SIDES.includes(side)) throw new Error(`Unknown side "${side}".`)
-  return path.join(vaultRoot, 'outputs', side, 'content', channel, folderName)
+  assertStage(channel, stage)
+  return path.join(vaultRoot, 'outputs', side, 'content', PLATFORMS[channel].folder, stage)
+}
+
+export function contentDir(vaultRoot, channel, side, stage, folderName) {
+  return path.join(stageRoot(vaultRoot, channel, side, stage), folderName)
 }
 
 export function designDir(vaultRoot, folderName) {

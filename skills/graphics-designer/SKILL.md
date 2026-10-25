@@ -3,7 +3,7 @@ name: graphics-designer
 description: Decide the job of one graphic, carousel or banner, then hand the build to the design system. Use before infographics-designer, carousel-designer or newsletter-thumbnail-designer.
 ---
 
-Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<channel>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. The finished image goes in `$VAULT/outputs/agent/design/<title>/`. `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
+Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. The finished image goes in `$VAULT/outputs/agent/design/<title>/`. `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
 
 A platform writer calls this for one visual, after the copy for that asset exists. Not a pipeline.
 
@@ -26,7 +26,7 @@ Use dimensions from the requested destination or supplied brief. Verify current 
 | Newsletter thumbnail | `newsletter-thumbnail-designer` | 420×300 | `pnpm dev` in `$DESIGN_SYSTEM`, Export → Download PNG. Or `GET /api/export/png?mode=<modeKey>` |
 | YouTube thumbnail | `youtube-thumbnail` | No canvas in Design OS yet | `thumbnail-brief.md` only, until a 1280×720 mode exists |
 
-Follow that skill's rules, including the design-brief gate for infographics, carousels and slides. Register the JSX in `$DESIGN_SYSTEM/src/modes.js` and `$DESIGN_SYSTEM/src/App.jsx` the way that skill says. Save the export into `$VAULT/outputs/agent/design/<title>/`. Do not call `render.py`.
+Write the brief first, in the platform's Design brief folder: `$VAULT/outputs/agent/content/<Platform>/Design brief/<title>/` (`infographic-brief.md`, `carousel.md`, `thumbnail-brief.md` or `figures-brief.md`, as `platforms.json` names it). Then follow that skill's rules, including the design-brief gate for infographics, carousels and slides. Register the JSX in `$DESIGN_SYSTEM/src/modes.js` and `$DESIGN_SYSTEM/src/App.jsx` the way that skill says. Save the export into `$VAULT/outputs/agent/design/<title>/`. Do not call `render.py`.
 
 ## Visual choices
 
@@ -38,4 +38,4 @@ For carousels, give each page a specific job and maintain continuity.
 
 ## Deliver
 
-Return the design file path, the mode key, the export path under `$VAULT/outputs/agent/design/<title>/`, the dimensions and any limitation. Producing one graphic does not authorize changing `$DESIGN_SYSTEM/DESIGN.md` or publishing the piece.
+Return the brief path, the design file path, the mode key, the export path under `$VAULT/outputs/agent/design/<title>/`, the dimensions and any limitation. Producing one graphic does not authorize changing `$DESIGN_SYSTEM/DESIGN.md` or publishing the piece.

@@ -1,10 +1,10 @@
 # Pipelines
 
-One content pipeline: the waterfall. It covers LinkedIn, the newsletter, X and YouTube. Per-platform work is a writer skill plus a row in [`platforms.json`](platforms.json), not a second pipeline.
+One content pipeline: the waterfall. It covers the newsletter, YouTube, YouTube Shorts, LinkedIn and X. Per-platform work is a writer skill plus a row in [`platforms.json`](platforms.json), not a second pipeline.
 
 Read [`vault.md`](vault.md) and `$VAULT/AGENTS.md` (Content Workflow) first. `$VAULT` is `VAULT_PATH` in `.env`, default `../Samy-SmartOS`. If that checkout is missing, stop and ask Samy to set the path.
 
-Nothing here posts or sends. Agents write to `outputs/agent/`. Samy polishes what he keeps into `outputs/human/` and publishes it himself. `publish` only records the date. The Notion calendar is his.
+Nothing here posts or sends. Agents write to `outputs/agent/`. Samy polishes what he keeps into `outputs/human/` and publishes it himself. `publish` only records the date. The Notion calendar is his: `skills/content-calendar` reads it and writes only when he asks.
 
 Notion stages, in order: **Idea**, **Research / Scripting**, **Design or Filming**, **Final copy / Editing**, **Scheduled**, **Posted**.
 

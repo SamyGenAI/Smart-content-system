@@ -1,9 +1,9 @@
 ---
 name: content-waterfall
-description: Run one content waterfall from idea to agent draft to Samy's published piece. Newsletter first, then YouTube, then LinkedIn, then X, one asset at a time. Use when Samy gives the idea of the week, wants the next platform piece, or asks to repurpose. Calls the four writers. Does not post.
+description: Run one content waterfall from idea to agent draft to Samy's published piece. Newsletter first, then YouTube (and an optional YouTube Short), then LinkedIn, then X, one asset at a time. Use when Samy gives the idea of the week, wants the next platform piece, or asks to repurpose. Calls the four writers. Does not post.
 ---
 
-Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<channel>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. The operating order is [`pipelines/content-waterfall.md`](../../pipelines/content-waterfall.md). Config is [`pipelines/platforms.json`](../../pipelines/platforms.json). The brief is `$VAULT/outputs/agent/content/newsletter/<title>/brief.md`. Each asset goes in `$VAULT/outputs/agent/content/<channel>/<title>/`. Design briefs go next to it; rendered visuals go in `$VAULT/outputs/agent/design/<title>/`. `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials. Skill-local `references/` resolve from this skill directory.
+Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. The operating order is [`pipelines/content-waterfall.md`](../../pipelines/content-waterfall.md). Config is [`pipelines/platforms.json`](../../pipelines/platforms.json). The brief is `$VAULT/outputs/agent/content/Newsletter/Research/<title>/brief.md`. Each asset goes in `$VAULT/outputs/agent/content/<Platform>/<Stage>/<title>/` (stage folders: Research, Text or Script, Design brief). Design briefs go next to it; rendered visuals go in `$VAULT/outputs/agent/design/<title>/`. `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials. Skill-local `references/` resolve from this skill directory.
 
 # Content waterfall
 
@@ -24,11 +24,11 @@ Video cutting, motion graphics and upload automation are later. Samy records and
 
 | Stage | What happens | Output | Samy decides |
 |---|---|---|---|
-| 0 Idea | Scan what is hot on YouTube, X and LinkedIn, add last week's signals | A slate of 3 to 5 ideas with proof of heat | The pick |
-| 1 Brief | Packaging notes, then the brief | `brief.md` from `references/brief-template.md`, only if missing | Release date |
+| 0 Idea | `content-research`, Ideas mode | A slate of 3 to 5 ideas with proof of heat | The pick |
+| 1 Brief | `content-research`, Research mode | `brief.md` in `Newsletter/Research/<title>/` and the Notion card, only if missing | Release date, the use case to test |
 | 2 Next | Read the vault folders and `waterfall.json` | One asset id | Skip or redirect |
 | 3 Draft | The writer for that asset only | One new file, or an edit he asked for | The wording |
-| 4 Visual | The design handoff on that asset, when `handsTo` is set | A brief next to the draft, one export in `outputs/agent/design/<title>/` | Whether it needs a visual |
+| 4 Visual | The design handoff on that asset, when `handsTo` is set | A brief in `<Platform>/Design brief/<title>/`, one export in `outputs/agent/design/<title>/` | Whether it needs a visual |
 | 5 Review | He approves before anything is queued | The same file | Go |
 | 6 Publish | He polishes into `outputs/human/`, then publishes | The date in `waterfall.json` | The word published |
 
@@ -58,14 +58,7 @@ Format modules those writers call: `linkedin-copywriter`, `linkedin-hook-writer`
 
 ## Stage 0: Find the idea
 
-| Scan | What to bring back |
-|---|---|
-| Last week's close | Winners, the best questions, customer wins he has already cleared |
-| YouTube | Outliers from `youtube-title-outlier-packaging` |
-| X | Posts going viral in the niche, checked the way `x-planner` describes |
-| LinkedIn | Outlier posts, with their hooks, from creators he follows |
-
-The slate: 3 to 5 ideas, each with its proof of heat, the pillar from `$VAULT/wiki/` (start at `content-os.md`), the funnel job and the receipt he can show on camera. Prefer ideas with more demand than supply.
+Samy names the idea, or `content-research` in Ideas mode brings him 3 to 5 ideas with proof of heat (social listening, YouTube outliers, X, communities, the Notion backlog). He picks. Never pick for him.
 
 Run `init` once he picks, so the newsletter draft folder and `waterfall.json` exist. `init` does not write the issue and does not touch a file he already saved.
 
@@ -73,12 +66,7 @@ Notion stage after the pick: **Idea**.
 
 ## Stage 1: Brief
 
-1. Take the picked idea in his words. Choose 1 pillar and 1 funnel stage from `offer.md`, the ICP pages and `voice.md`.
-2. Stance check: read what he published on the topic, starting from `$VAULT/wiki/` and `$VAULT/outputs/human/content/`. The new piece builds on it or names the change.
-3. Facts: check every product, model or market claim at its source and date it. Numbers, results and testimonials come only from `proof.md` or a source quoted in the brief.
-4. Worked example and resource: prefer what he can show and what already exists.
-5. Write the brief from `references/brief-template.md` to the newsletter draft's `brief.md` when that file is absent. Do not overwrite an existing brief.
-6. Ask him only what he alone knows: the release date. List everything else under open decisions.
+Run `content-research` in Research mode on the picked idea. It checks for a human draft, runs the research tracks with subagents, scores the angles, tests the contrarian takes, writes the test plan, and saves one brief for every platform to `$VAULT/outputs/agent/content/Newsletter/Research/<title>/brief.md` and to the Notion card. It never overwrites an existing `brief.md`. Ask Samy only what he alone knows: the release date and which use case to test.
 
 Notion stage: **Research / Scripting**.
 
@@ -100,7 +88,7 @@ Skip what this idea does not need:
 node scripts/content-waterfall.mjs skip --title "<title>" --channel linkedin --asset carousel
 ```
 
-The content calendar lives in Notion. Update a card only when he asked and `$VAULT/wiki/` documents that database. Otherwise keep the dated plan in the brief. Stages: Idea, Research / Scripting, Design or Filming, Final copy / Editing, Scheduled, Posted.
+The content calendar lives in Notion. Read and update it with `content-calendar`, and update a card only when he asked. Otherwise keep the dated plan in the brief. Stages: Idea, Research / Scripting, Design or Filming, Final copy / Editing, Scheduled, Posted.
 
 Default publish calendar, counted from release day D. This is when pieces go out, not permission to draft them all now.
 
@@ -118,7 +106,7 @@ Default publish calendar, counted from release day D. This is when pieces go out
 
 Call the one writer. Pass the asset id. Do not call the other three.
 
-Save under `$VAULT/outputs/agent/content/<channel>/<title>/` using the filename in `platforms.json`. An existing markdown file, in that agent folder or in his `$VAULT/outputs/human/content/<channel>/<title>/`, satisfies the primary asset for that channel. Leave it in place.
+Save in the `draftDir` that `next` returns, `$VAULT/outputs/agent/content/<Platform>/<Stage>/<title>/`, with the filename in `platforms.json`. An existing markdown file, in that agent folder, or in his `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/`, satisfies the primary asset for that channel. Leave it in place.
 
 Notion stage once that asset is in the folder: **Final copy / Editing**.
 
@@ -142,7 +130,7 @@ He approves the copy and the visual. **Scheduled** only after he queues it himse
 
 ## Stage 6: Publish
 
-He polishes the version he keeps into `$VAULT/outputs/human/content/<channel>/<title>/`, then posts, sends or uploads. Then, and only then:
+He polishes the version he keeps into `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/`, then posts, sends or uploads. Then, and only then:
 
 ```bash
 node scripts/content-waterfall.mjs publish --title "<title>" --channel <channel> --yes

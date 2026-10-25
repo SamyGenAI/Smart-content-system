@@ -5,7 +5,7 @@ description: >-
   one reader takeaway. The content waterfall calls this writer. It is not a pipeline.
 ---
 
-Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<channel>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save the issue under `$VAULT/outputs/agent/content/newsletter/<title>/`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
+Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save the issue under `$VAULT/outputs/agent/content/Newsletter/Text/<title>/` and the thumbnail brief under `$VAULT/outputs/agent/content/Newsletter/Design brief/<title>/`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
 
 # Newsletter writer
 
@@ -19,7 +19,7 @@ Write only the asset that command names. If it reports `exists`, stop. Edit Samy
 
 ## Issue
 
-Read `voice.md`, `offer.md`, `proof.md`, `$VAULT/wiki/content-os.md` and the full supplied sources. Read earlier issues in `$VAULT/outputs/human/content/newsletter/` so the format stays his. One useful idea per issue.
+Read `voice.md`, `offer.md`, `proof.md`, `$VAULT/wiki/content-os.md` and the full supplied sources. Read earlier issues in `$VAULT/outputs/human/content/Newsletter/Text/` so the format stays his. One useful idea per issue.
 
 File: `issue.md` when no draft exists yet. If a markdown file is already in the folder (`How to design with AI.md` or anything else that is not `brief.md`), that file is the issue. Do not create `issue.md` as well.
 
@@ -46,7 +46,7 @@ Edit for new information per paragraph. Preserve his phrasing. Remove inflated t
 
 Only when `next` names `thumbnail`, or Samy asks for it. Skill: `newsletter-thumbnail-designer`. Canvas: 420×300. That skill is not the YouTube thumbnail.
 
-Write the brief first: `thumbnail-brief.md` in the newsletter folder (title, one visual idea, what not to do). `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. Render with `pnpm dev` in `$DESIGN_SYSTEM`, then Export → Download PNG. With the server up: `GET /api/export/png?mode=<modeKey>`. Save `$VAULT/outputs/agent/design/<title>/newsletter-thumbnail.png`. Do not call `render.py`.
+Write the brief first: `thumbnail-brief.md` in `Newsletter/Design brief/<title>/` (title, one visual idea, what not to do). `$DESIGN_SYSTEM` is the `DESIGN_SYSTEM_PATH` checkout of the Smart design system (default `../smart-design-system`): Design OS builds and renders every visual there. Render with `pnpm dev` in `$DESIGN_SYSTEM`, then Export → Download PNG. With the server up: `GET /api/export/png?mode=<modeKey>`. Save `$VAULT/outputs/agent/design/<title>/newsletter-thumbnail.png`. Do not call `render.py`.
 
 A graphic inside the issue uses `graphics-designer`, then the Design OS skill it names. Save that export in `$VAULT/outputs/agent/design/<title>/` under its own name. Do not treat it as the email thumbnail.
 
@@ -58,4 +58,4 @@ Return subject, preview, the draft path and a short source list outside the copy
 node scripts/content-waterfall.mjs publish --title "<title>" --channel newsletter --yes
 ```
 
-That records the date in the manifest. Nothing moves. The published version is Samy's file in `$VAULT/outputs/human/content/newsletter/`. It does not send.
+That records the date in the manifest. Nothing moves. The published version is Samy's file in `$VAULT/outputs/human/content/Newsletter/Text/<title>/`. It does not send.

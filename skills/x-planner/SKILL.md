@@ -3,7 +3,7 @@ name: x-planner
 description: Plan the author's X posts together with them, day by day, from 3 lanes: LinkedIn posts repurposed for X, native posts from what is going viral in their niche, and their own launches or assets. Presents a slate for the author to pick and cut, drafts the picks, records their verdicts. Use when planning X for the week or when the content waterfall hands over micro posts and chapter threads.
 ---
 
-Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<channel>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save each picked post to `$VAULT/outputs/agent/content/x/<title>/`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials. Skill-local `references/` resolve from this skill directory.
+Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save each picked post to `$VAULT/outputs/agent/content/X/Text/<title>/` and the weekly plan to `$VAULT/outputs/agent/content/X/Research/<week>/`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials. Skill-local `references/` resolve from this skill directory.
 
 Called by `x-writer` when a week of posts needs a slate. Not a pipeline.
 
@@ -13,7 +13,7 @@ X gets its own planning session, made together with the author. `x-writer` draft
 
 ## The session
 
-1. **Window.** Default the next 7 days. Read every planned piece in the window (all platforms, including Notion if the author has shared the calendar), so X fits the week and nothing doubles.
+1. **Window.** Default the next 7 days. Read every planned piece in the window (all platforms, including the Notion calendar through `content-calendar`), so X fits the week and nothing doubles.
 2. **Gather the 3 lanes** below.
 3. **Show the slate.** 1 table per day with about 1.5 times as many candidates as slots, so the author can cut:
 
@@ -23,7 +23,7 @@ X gets its own planning session, made together with the author. `x-writer` draft
    Write the first line in full; the rest is 1 line. Mark your pick per day; the choice is the author's.
 4. **The author picks, cuts and edits.** Keep their words verbatim.
 5. **Draft the picks** (see "Writing for X").
-6. **Save** each pick to `$VAULT/outputs/agent/content/x/<title>/`. Update the Notion calendar only when the author asked and `$VAULT/wiki/` documents that database. Stages are Idea, Research / Scripting, Design or Filming, Final copy / Editing, Scheduled, Posted. Otherwise return the slate in chat.
+6. **Save** each pick to `$VAULT/outputs/agent/content/X/Text/<title>/`. Update the Notion calendar with `content-calendar`, only when the author asked. Stages are Idea, Research / Scripting, Design or Filming, Final copy / Editing, Scheduled, Posted. Otherwise return the slate in chat.
 7. **Schedule** only on the author's go, in X itself. This repo does not schedule or post.
 8. **Learn.** Add what the author picked and cut, with the reason, to `references/verdicts.md`. The next slate starts from those verdicts.
 

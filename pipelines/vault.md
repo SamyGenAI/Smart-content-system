@@ -31,9 +31,9 @@ Karpathy's LLM-wiki layout. The schema is `$VAULT/AGENTS.md`. Follow its Content
 | `$VAULT/wiki/content-os.md` | Content OS hub. |
 | `$VAULT/wiki/design-os.md` | Design OS hub: formats and the brief-to-asset flow. |
 | `$VAULT/wiki/log.md` | Append-only. Add a line only when the vault schema says to. |
-| `$VAULT/outputs/agent/content/<channel>/<title>/` | Where this repo writes. One folder per piece. Channels: `newsletter`, `youtube`, `linkedin`, `x`. Drafts, briefs, `waterfall.json`. |
+| `$VAULT/outputs/agent/content/<Platform>/<Stage>/<title>/` | Where this repo writes. One folder per piece, per stage. Platforms: `Newsletter`, `Youtube`, `Youtube short`, `Linkedin`, `X`. Stages: `Research`, `Text` (Newsletter, Linkedin, X) or `Script` (Youtube, Youtube short), `Design brief`. `waterfall.json` and `brief.md` live in `Newsletter/Research/<title>/`. |
 | `$VAULT/outputs/agent/design/<title>/` | Where Design OS saves the rendered visuals for that piece. |
-| `$VAULT/outputs/human/content/<channel>/<title>/` | Samy's polished, final version. Read-only from this repo. Read it as the example to match, and as his past posts. |
+| `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/` | Samy's polished, final version, same layout. Read-only from this repo. Read it as the example to match, and as his past posts. |
 
 There are no `drafts/` or `published/` folders.
 
@@ -43,7 +43,7 @@ There are no `drafts/` or `published/` folders.
 - Samy takes what he likes from the agent folder and polishes it into the human folder. A file in the human folder is the latest, final version of that piece.
 - An asset counts as done when its file exists in either folder. If Samy already wrote `How to design with AI.md` in his human folder, that file is the asset. Do not draft a second copy.
 - A new asset file is allowed in the agent folder when that file does not exist yet. Never overwrite one that does.
-- `waterfall.json` is the idea manifest this repo maintains, in the newsletter agent folder. It records folder names, skips, and publish dates. The files on disk are the asset state. Do not put the manifest in `raw/` or `human/`.
+- `waterfall.json` is the idea manifest this repo maintains, in `outputs/agent/content/Newsletter/Research/<title>/`. It records folder names, skips, and publish dates. The files on disk are the asset state. Do not put the manifest in `raw/` or `human/`.
 - Facts in copy come from `proof.md` or a wiki page that cites a source. Do not invent numbers, results, testimonials, or a voice.
 
 ## Publishing

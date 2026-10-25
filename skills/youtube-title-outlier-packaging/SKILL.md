@@ -3,7 +3,7 @@ name: youtube-title-outlier-packaging
 description: Find YouTube packaging outliers in the author's niche, draft 2 A/B titles from proven structures with every claim marked, and brief thumbnail concepts. Use when choosing or split-testing a YouTube title or packaging a video before recording.
 ---
 
-Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<channel>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save the packaging brief to `$VAULT/outputs/agent/content/youtube/<title>/`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
+Vault: follow [`pipelines/vault.md`](../../pipelines/vault.md). `$VAULT` is the `VAULT_PATH` checkout (default `../Samy-SmartOS`). Read `$VAULT/AGENTS.md` and follow its Content Workflow. Voice, proof, offer, ICP and positioning are read from `$VAULT/raw/me/` (`voice.md`, `proof.md`, `offer.md`). Never write `$VAULT/raw/` or `$VAULT/outputs/human/`. `$VAULT/outputs/human/content/<Platform>/<Stage>/<title>/` holds Samy's polished, final pieces: read them as the examples to match. Topic knowledge starts at `$VAULT/wiki/index.md` and `$VAULT/wiki/content-os.md`. Save the titles to `$VAULT/outputs/agent/content/Youtube/Script/<title>/titles.md` and the outlier research to `$VAULT/outputs/agent/content/Youtube/Research/<title>/outliers.md`. If `$VAULT` is missing, stop and ask Samy to set `VAULT_PATH`. Do not copy vault files into this repo, and do not invent numbers, results or testimonials.
 
 Called by `youtube-writer` for `titles.md`. Not a pipeline.
 
@@ -23,7 +23,7 @@ Read `$VAULT/raw/me/proof.md` before any public number, the ICP pages in `$VAULT
 
 Use what is available, in this order:
 
-1. The vidIQ plugin, if installed: its outlier and trend views across channels.
+1. The vidIQ MCP (Claude.ai connector): its outlier, trend and channel-stats tools. Start the prompt with "Use vidIQ to…". If its tools are missing or not signed in, say so and continue with step 2.
 2. The YouTube Data API or manual research: search the niche for the last 3 to 6 months.
 3. Channels the author's audience already watches.
 

@@ -2,11 +2,13 @@
 /**
  * Content waterfall state.
  *
- * One idea, four channels, one asset at a time.
- * Order: newsletter, then YouTube, then LinkedIn, then X.
+ * One idea, one asset at a time.
+ * Order: newsletter, then YouTube, then the optional YouTube Short, then LinkedIn, then X.
  * Reads the vault at VAULT_PATH (default ../Samy-SmartOS).
- * An asset counts when its file is in outputs/agent/content/ (agent drafts)
- * or outputs/human/content/ (Samy's polished version).
+ * Layout: outputs/{agent,human}/content/<Platform>/<Stage>/<title>/, for example
+ * outputs/agent/content/Linkedin/Text/How to design with AI/post.md.
+ * An asset counts when its file is on the agent side (drafts) or the human side
+ * (Samy's polished version).
  * Writes only outputs/agent/content/. Never writes raw/ or outputs/human/.
  * Never overwrites an existing draft file.
  * Never posts, schedules, uploads, or sends.
@@ -18,6 +20,7 @@
  *   node scripts/content-waterfall.mjs link --title "..." --channel linkedin --folder "How to design with AI 1"
  *   node scripts/content-waterfall.mjs skip --title "..." --channel x --asset thread
  *   node scripts/content-waterfall.mjs publish --title "..." --channel newsletter --yes
+ *   node scripts/content-waterfall.mjs scaffold
  *   node scripts/content-waterfall.mjs self-test
  */
 
@@ -28,6 +31,7 @@ import { spawnSync } from 'child_process'
 import { fileURLToPath } from 'url'
 import {
   CHANNELS,
+  PLATFORMS,
   REPO_ROOT,
   assertChannel,
   assertContentWrite,
@@ -36,6 +40,7 @@ import {
   designDir,
   resolveDesignSystemPath,
   resolveVaultPath,
+  stageRoot,
 } from './lib/vault.mjs'
 
 const SCRIPT_PATH = fileURLToPath(import.meta.url)
@@ -45,7 +50,14 @@ const RESERVED_ROOT = new Set(['brief.md'])
 function loadConfig() {
   const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'))
   if (!Array.isArray(config.order) || config.order.join() !== CHANNELS.join()) {
-    throw new Error('pipelines/platforms.json order must be newsletter, youtube, linkedin, x.')
+    throw new Error(`pipelines/platforms.json order must be ${CHANNELS.join(', ')}.`)
+  }
+  for (const channel of config.order) {
+    for (const asset of config.platforms[channel].assets) {
+      if (!PLATFORMS[channel].stages.includes(asset.stage)) {
+        throw new Error(`${channel}/${asset.id} has an unknown stage "${asset.stage}".`)
+      }
+    }
   }
   return config
 }
@@ -99,16 +111,20 @@ function listDirs(dir) {
 }
 
 function isDir(dir) {
-  return fs.existsSync(dir) && fs.statSync(dir).isDirectory()
+  return Boolean(dir) && fs.existsSync(dir) && fs.statSync(dir).isDirectory()
 }
 
-/** Manifests live on the agent side only. */
-function findManifests(vault, title) {
+function manifestDir(vault, config, name) {
+  return contentDir(vault, config.manifest.channel, 'agent', config.manifest.stage, name)
+}
+
+/** Manifests live on the agent side only, in <Platform>/Research/<title>/. */
+function findManifests(vault, config, title) {
   const hits = []
   for (const channel of CHANNELS) {
-    const base = path.join(vault, 'outputs', 'agent', 'content', channel)
+    const base = stageRoot(vault, channel, 'agent', config.manifest.stage)
     for (const name of listDirs(base)) {
-      const file = path.join(base, name, 'waterfall.json')
+      const file = path.join(base, name, config.manifest.file)
       if (!fs.existsSync(file)) continue
       let data
       try {
@@ -125,27 +141,48 @@ function findManifests(vault, title) {
   return hits
 }
 
-/** One folder name per channel, looked up on both sides. */
+/** Every stage folder of one piece, on both sides. */
+function pieceDirs(vault, channel, name) {
+  const stages = {}
+  for (const stage of PLATFORMS[channel].stages) {
+    const agent = contentDir(vault, channel, 'agent', stage, name)
+    const human = contentDir(vault, channel, 'human', stage, name)
+    stages[stage] = { agent: isDir(agent) ? agent : null, human: isDir(human) ? human : null }
+  }
+  return { name, stages }
+}
+
+function hasSide(folder, side) {
+  return Object.values(folder.stages).some((dirs) => Boolean(dirs[side]))
+}
+
+function hasFolder(folder) {
+  return hasSide(folder, 'agent') || hasSide(folder, 'human')
+}
+
+function sidesFound(folder) {
+  return ['agent', 'human'].filter((side) => hasSide(folder, side))
+}
+
+function folderPaths(folder, sides = ['human', 'agent']) {
+  const out = []
+  for (const dirs of Object.values(folder.stages)) {
+    for (const side of sides) if (dirs[side]) out.push(dirs[side])
+  }
+  return out
+}
+
+/** One folder name per channel, looked up in every stage on both sides. */
 function resolveFolder(vault, channel, title, manifest) {
   const linked = manifest?.folders?.[channel]
   const names = []
   if (typeof linked === 'string' && linked.trim()) names.push(linked.trim())
   if (!names.includes(title)) names.push(title)
   for (const name of names) {
-    const agent = contentDir(vault, channel, 'agent', name)
-    const human = contentDir(vault, channel, 'human', name)
-    const found = { name, agent: isDir(agent) ? agent : null, human: isDir(human) ? human : null }
-    if (found.agent || found.human) return found
+    const found = pieceDirs(vault, channel, name)
+    if (hasFolder(found)) return found
   }
-  return { name: names[0], agent: null, human: null }
-}
-
-function hasFolder(folder) {
-  return Boolean(folder.agent || folder.human)
-}
-
-function sidesFound(folder) {
-  return ['agent', 'human'].filter((side) => folder[side])
+  return pieceDirs(vault, channel, names[0])
 }
 
 function rootMarkdown(dir) {
@@ -189,8 +226,10 @@ function assetHit(dir, asset, assets) {
 
 /** Samy's polished file wins over an agent draft. */
 function sideHit(folder, asset, assets) {
-  for (const side of ['human', 'agent']) {
-    const hit = assetHit(folder[side], asset, assets)
+  const dirs = folder.stages[asset.stage]
+  const places = [['human', dirs.human], ['agent', dirs.agent]]
+  for (const [side, dir] of places) {
+    const hit = assetHit(dir, asset, assets)
     if (hit.present) return { ...hit, side }
   }
   return { present: false, path: null, via: null, side: null }
@@ -205,6 +244,7 @@ function scanAssets(config, folders) {
         channel,
         id: asset.id,
         label: asset.label,
+        stage: asset.stage,
         required: Boolean(asset.required),
         ...sideHit(folders[channel], asset, assets),
         satisfiedBy: null,
@@ -258,8 +298,8 @@ function pickNext(config, assets, manifest, { channel, assetId, includeOptional 
 
 function stageOf(folder, manifest, channel) {
   if (manifest?.published?.[channel]) return 'published'
-  if (folder.human) return 'polished'
-  if (folder.agent) return 'draft'
+  if (hasSide(folder, 'human')) return 'polished'
+  if (hasSide(folder, 'agent')) return 'draft'
   return 'missing'
 }
 
@@ -268,6 +308,7 @@ function snapshot(config, assets, folders, manifest) {
   for (const channel of config.order) {
     const folder = folders[channel]
     view[channel] = {
+      platform: PLATFORMS[channel].folder,
       folder: hasFolder(folder) ? folder.name : null,
       stage: stageOf(folder, manifest, channel),
       published: manifest?.published?.[channel] || null,
@@ -282,6 +323,7 @@ function snapshot(config, assets, folders, manifest) {
       view[channel].assets[asset.id] = {
         status,
         required: Boolean(asset.required),
+        stage: asset.stage,
         side: hit.side,
         via: hit.via,
         path: hit.path,
@@ -296,20 +338,24 @@ function describeNext(config, choice, folders, title) {
   const vault = resolveVaultPath()
   const folder = folders[choice.channel]
   const name = folder.name || title
+  const writer = config.platforms[choice.channel].writer || null
   return {
     channel: choice.channel,
+    platform: PLATFORMS[choice.channel].folder,
     asset: choice.asset.id,
     label: choice.asset.label,
+    stage: choice.asset.stage,
     required: Boolean(choice.asset.required),
     present: Boolean(choice.present),
     path: choice.path || null,
     via: choice.via || null,
     file: choice.asset.files[0],
-    writer: config.platforms[choice.channel].writer,
-    draftDir: folder.agent || contentDir(vault, choice.channel, 'agent', name),
+    writer,
+    draftDir: folder.stages[choice.asset.stage].agent
+      || contentDir(vault, choice.channel, 'agent', choice.asset.stage, name),
     designDir: choice.asset.handsTo ? designDir(vault, name) : null,
     handsTo: choice.asset.handsTo || null,
-    action: choice.present ? 'exists' : 'write',
+    action: choice.present ? 'exists' : (writer ? 'write' : 'no-writer'),
   }
 }
 
@@ -327,14 +373,33 @@ function summary(config, view, next) {
   return `Next: ${nextLabel}. Present: ${present.join(', ') || 'none'}. Missing required: ${missing.join(', ') || 'none'}.`
 }
 
+function briefState(vault, config, folders, title) {
+  const folder = folders[config.brief.channel]
+  const name = folder.name || title
+  const dirs = folder.stages[config.brief.stage]
+  const places = [dirs.human, dirs.agent]
+  for (const dir of places) {
+    const hit = filePresent(dir, config.brief.file)
+    if (hit) return { present: true, path: hit }
+  }
+  return {
+    present: false,
+    path: path.join(contentDir(vault, config.brief.channel, 'agent', config.brief.stage, name), config.brief.file),
+  }
+}
+
+function emptyByChannel() {
+  return Object.fromEntries(CHANNELS.map((channel) => [channel, null]))
+}
+
 function blankManifest(title) {
   return {
     title,
     created: new Date().toISOString(),
     updated: new Date().toISOString(),
     notes: '',
-    folders: { newsletter: null, youtube: null, linkedin: null, x: null },
-    published: { newsletter: null, youtube: null, linkedin: null, x: null },
+    folders: emptyByChannel(),
+    published: emptyByChannel(),
     skipped: [],
     lastNext: null,
   }
@@ -369,10 +434,10 @@ function manifestChanged(prev, next) {
   return JSON.stringify(strip(prev)) !== JSON.stringify(strip(next))
 }
 
-function preferredManifestPath(vault, title, folders, existing) {
+function preferredManifestPath(vault, config, title, folders, existing) {
   if (existing?.file) return existing.file
-  const name = folders.newsletter?.name || title
-  return path.join(contentDir(vault, 'newsletter', 'agent', name), 'waterfall.json')
+  const name = folders[config.manifest.channel]?.name || title
+  return path.join(manifestDir(vault, config, name), config.manifest.file)
 }
 
 function loadState(vault, title) {
@@ -382,7 +447,7 @@ function loadState(vault, title) {
     error.code = 2
     throw error
   }
-  const hits = findManifests(vault, title)
+  const hits = findManifests(vault, config, title)
   const existing = hits[0] || null
   const manifest = existing?.data || null
   const folders = {}
@@ -418,7 +483,7 @@ function buildManifest(title, prev, folders, assets, config, patch = {}) {
 
 function saveManifest(vault, title, state, patch = {}) {
   const next = buildManifest(title, state.manifest, state.folders, state.assets, state.config, patch)
-  const target = preferredManifestPath(vault, title, state.folders, state.existing)
+  const target = preferredManifestPath(vault, state.config, title, state.folders, state.existing)
   if (state.manifest && !manifestChanged(state.manifest, next) && state.existing?.file === target) {
     return { manifest: state.manifest, wrote: false, file: state.existing.file }
   }
@@ -460,6 +525,7 @@ function commandStatus(vault, title, { write }) {
     title,
     vault,
     manifest: manifestFile,
+    brief: briefState(vault, state.config, state.folders, title),
     summary: summary(state.config, view, next),
     next,
     channels: view,
@@ -486,6 +552,9 @@ function commandNext(vault, title, args) {
       lastNext: next ? { channel: next.channel, asset: next.asset, at: new Date().toISOString() } : null,
     })
   }
+  let note = 'Write only this asset, in draftDir. Leave every other file as it is. Never write outputs/human/.'
+  if (next?.action === 'exists') note = 'This asset already exists. Do not write another copy.'
+  if (next?.action === 'no-writer') note = `No writer skill for ${next.platform} yet. Ask Samy before drafting it.`
   emit({
     ok: true,
     command: 'next',
@@ -493,25 +562,23 @@ function commandNext(vault, title, args) {
     vault,
     summary: summary(state.config, snapshot(state.config, state.assets, state.folders, state.manifest), next),
     next,
-    note: next?.action === 'exists'
-      ? 'This asset already exists. Do not write another copy.'
-      : 'Write only this asset, in draftDir. Leave every other file as it is. Never write outputs/human/.',
+    note,
   })
 }
 
 function commandInit(vault, title) {
   requireVault(vault)
   const before = loadState(vault, title)
-  const name = before.folders.newsletter.name || title
-  const draft = contentDir(vault, 'newsletter', 'agent', name)
-  const existingDraftFiles = fs.existsSync(draft)
-    ? fs.readdirSync(draft).filter((file) => file !== 'waterfall.json')
+  const name = before.folders[before.config.manifest.channel].name || title
+  const dir = manifestDir(vault, before.config, name)
+  const existingFiles = fs.existsSync(dir)
+    ? fs.readdirSync(dir).filter((file) => file !== before.config.manifest.file)
     : []
-  assertContentWrite(vault, path.join(draft, 'waterfall.json'))
-  fs.mkdirSync(draft, { recursive: true })
+  assertContentWrite(vault, path.join(dir, before.config.manifest.file))
+  fs.mkdirSync(dir, { recursive: true })
   const state = loadState(vault, title)
   const saved = saveManifest(vault, title, state, {
-    folders: { newsletter: name },
+    folders: { [state.config.manifest.channel]: name },
   })
   emit({
     ok: true,
@@ -519,8 +586,9 @@ function commandInit(vault, title) {
     title,
     vault,
     manifest: saved.file,
+    brief: briefState(vault, state.config, state.folders, title),
     wrote: saved.wrote,
-    preserved: existingDraftFiles,
+    preserved: existingFiles,
     note: 'Files already in the folder were left unchanged. outputs/human/ was not touched. Nothing was posted.',
   })
 }
@@ -528,25 +596,25 @@ function commandInit(vault, title) {
 function commandLink(vault, title, args) {
   requireVault(vault)
   const channel = assertChannel(args.channel)
-  const folder = assertTitle(args.folder)
-  const agent = contentDir(vault, channel, 'agent', folder)
-  const human = contentDir(vault, channel, 'human', folder)
-  if (!isDir(agent) && !isDir(human)) {
-    fail(1, `No ${channel} folder named "${folder}" under outputs/agent/ or outputs/human/.`)
+  const folderName = assertTitle(args.folder)
+  const found = pieceDirs(vault, channel, folderName)
+  if (!hasFolder(found)) {
+    fail(1, `No ${PLATFORMS[channel].folder} folder named "${folderName}" in any stage under outputs/agent/ or outputs/human/.`)
   }
   const state = loadState(vault, title)
   state.manifest = state.manifest || blankManifest(title)
-  state.manifest.folders = { ...(state.manifest.folders || {}), [channel]: folder }
-  state.folders[channel] = { name: folder, agent: isDir(agent) ? agent : null, human: isDir(human) ? human : null }
+  state.manifest.folders = { ...(state.manifest.folders || {}), [channel]: folderName }
+  state.folders[channel] = found
   state.assets = scanAssets(state.config, state.folders)
-  const saved = saveManifest(vault, title, state, { folders: { [channel]: folder } })
+  const saved = saveManifest(vault, title, state, { folders: { [channel]: folderName } })
   emit({
     ok: true,
     command: 'link',
     title,
     channel,
-    folder,
-    sides: sidesFound(state.folders[channel]),
+    folder: folderName,
+    sides: sidesFound(found),
+    paths: folderPaths(found),
     manifest: saved.file,
     note: 'Linked the existing folder. No draft file was modified.',
   })
@@ -587,6 +655,7 @@ function commandPublish(vault, title, args) {
   const channel = assertChannel(args.channel)
   const state = loadState(vault, title)
   const folder = state.folders[channel]
+  const humanPaths = folderPaths(folder, ['human'])
   const already = state.manifest?.published?.[channel]
   if (already) {
     emit({
@@ -596,16 +665,16 @@ function commandPublish(vault, title, args) {
       channel,
       already: true,
       published: already,
-      path: folder.human,
+      paths: humanPaths,
       note: 'Already recorded as published. Nothing was posted.',
     })
   }
-  if (!folder.human) {
-    fail(1, `No polished ${channel} folder for "${title}" in outputs/human/content/${channel}/. Samy keeps the final version there before it counts as published.`)
+  if (!hasSide(folder, 'human')) {
+    fail(1, `No polished ${PLATFORMS[channel].folder} folder for "${title}" in outputs/human/content/${PLATFORMS[channel].folder}/. Samy keeps the final version there before it counts as published.`)
   }
   if (!args.yes) {
     fail(1, 'Refusing to record the publish. Re-run with --yes only after Samy says this piece is published. Nothing is posted.', {
-      wouldRecord: { channel, path: folder.human },
+      wouldRecord: { channel, paths: humanPaths },
     })
   }
   const at = new Date().toISOString()
@@ -616,7 +685,7 @@ function commandPublish(vault, title, args) {
     title,
     channel,
     published: at,
-    path: folder.human,
+    paths: humanPaths,
     manifest: saved.file,
     note: 'Recorded the publish date. Nothing moved and nothing was posted or sent. Log it in wiki/log.md.',
   })
@@ -634,6 +703,7 @@ function commandPaths(vault, title) {
     'wiki/log.md',
   ]
   const designSystem = resolveDesignSystemPath()
+  const name = title || '<title>'
   emit({
     ok: true,
     command: 'paths',
@@ -645,13 +715,38 @@ function commandPaths(vault, title) {
       exists: fs.existsSync(path.join(vault, rel)),
     }])),
     channels: Object.fromEntries(CHANNELS.map((channel) => [channel, {
-      agent: contentDir(vault, channel, 'agent', title || '<title>'),
-      human: contentDir(vault, channel, 'human', title || '<title>'),
+      platform: PLATFORMS[channel].folder,
+      agent: Object.fromEntries(PLATFORMS[channel].stages.map((stage) => [stage, contentDir(vault, channel, 'agent', stage, name)])),
+      human: Object.fromEntries(PLATFORMS[channel].stages.map((stage) => [stage, contentDir(vault, channel, 'human', stage, name)])),
     }])),
-    design: designDir(vault, title || '<title>'),
+    design: designDir(vault, name),
     designSystem,
     designSystemExists: fs.existsSync(designSystem),
     note: 'raw/ and outputs/human/ are read-only. This command does not copy files and does not post.',
+  })
+}
+
+/** Creates the empty agent tree: outputs/agent/content/<Platform>/<Stage>/.gitkeep. Never touches outputs/human/. */
+function commandScaffold(vault) {
+  requireVault(vault)
+  const created = []
+  for (const channel of CHANNELS) {
+    for (const stage of PLATFORMS[channel].stages) {
+      const dir = stageRoot(vault, channel, 'agent', stage)
+      if (!isDir(dir)) {
+        fs.mkdirSync(dir, { recursive: true })
+        created.push(dir)
+      }
+      const keep = path.join(dir, '.gitkeep')
+      if (!fs.existsSync(keep) && fs.readdirSync(dir).length === 0) fs.writeFileSync(keep, '')
+    }
+  }
+  emit({
+    ok: true,
+    command: 'scaffold',
+    vault,
+    created,
+    note: 'Created only missing agent folders. outputs/human/ was not touched.',
   })
 }
 
@@ -667,9 +762,11 @@ function help() {
       'skip --title "<title>" --channel <channel> [--asset <id>] [--undo]',
       'publish --title "<title>" --channel <channel> --yes',
       'paths [--title "<title>"]',
+      'scaffold',
       'self-test',
     ],
     order: CHANNELS,
+    platforms: Object.fromEntries(CHANNELS.map((channel) => [channel, PLATFORMS[channel]])),
     note: 'One shared waterfall. One asset at a time. Nothing is posted.',
   })
 }
@@ -696,39 +793,45 @@ function parseOut(result) {
 function selfTest() {
   const vault = fs.mkdtempSync(path.join(os.tmpdir(), 'waterfall-'))
   const title = 'How to design with AI'
-  const humanNewsletter = contentDir(vault, 'newsletter', 'human', title)
-  const agentNewsletter = contentDir(vault, 'newsletter', 'agent', title)
+  const humanNewsletter = contentDir(vault, 'newsletter', 'human', 'Text', title)
+  const agentResearch = contentDir(vault, 'newsletter', 'agent', 'Research', title)
   fs.mkdirSync(humanNewsletter, { recursive: true })
   const samyDraft = path.join(humanNewsletter, 'How to design with AI.md')
   fs.writeFileSync(samyDraft, 'SAMY DRAFT\n')
   fs.mkdirSync(path.join(vault, 'raw', 'me'), { recursive: true })
   fs.writeFileSync(path.join(vault, 'raw', 'me', 'proof.md'), 'proof\n')
 
+  const scaffold = parseOut(runCli(['scaffold'], vault))
+  assert(scaffold.ok, 'scaffold should succeed')
+  assert(fs.existsSync(path.join(stageRoot(vault, 'youtube-short', 'agent', 'Script'), '.gitkeep')), 'scaffold creates the Youtube short/Script folder')
+  assert(!fs.existsSync(path.join(stageRoot(vault, 'newsletter', 'human', 'Text'), '.gitkeep')), 'scaffold must not write outputs/human/')
+
   const init = parseOut(runCli(['init', '--title', title], vault))
   assert(init.ok, 'init should succeed')
   assert(fs.readFileSync(samyDraft, 'utf8') === 'SAMY DRAFT\n', 'init must not change a human file')
-  assert(fs.existsSync(path.join(agentNewsletter, 'waterfall.json')), 'init writes waterfall.json in the agent folder')
-  assert(!fs.existsSync(path.join(humanNewsletter, 'waterfall.json')), 'init must not write outputs/human/')
+  assert(fs.existsSync(path.join(agentResearch, 'waterfall.json')), 'init writes waterfall.json in Newsletter/Research')
+  assert(init.brief.path === path.join(agentResearch, 'brief.md'), 'the brief goes in Newsletter/Research')
 
-  const manifest = readJson(path.join(agentNewsletter, 'waterfall.json'))
+  const manifest = readJson(path.join(agentResearch, 'waterfall.json'))
   manifest.notes = 'keep this'
-  fs.writeFileSync(path.join(agentNewsletter, 'waterfall.json'), `${JSON.stringify(manifest, null, 2)}\n`)
+  fs.writeFileSync(path.join(agentResearch, 'waterfall.json'), `${JSON.stringify(manifest, null, 2)}\n`)
   const initAgain = parseOut(runCli(['init', '--title', title], vault))
   assert(initAgain.ok, 'second init should succeed')
-  assert(readJson(path.join(agentNewsletter, 'waterfall.json')).notes === 'keep this', 'notes must survive init')
+  assert(readJson(path.join(agentResearch, 'waterfall.json')).notes === 'keep this', 'notes must survive init')
 
   const status = parseOut(runCli(['status', '--title', title], vault))
   assert(status.channels.newsletter.assets.issue.status === 'present', 'a human file counts as the issue')
   assert(status.channels.newsletter.assets.issue.side === 'human', 'the issue is found on the human side')
   assert(status.channels.newsletter.stage === 'polished', 'a human folder is polished')
   assert(status.next.channel === 'youtube' && status.next.asset === 'script', 'default next is the YouTube script')
+  assert(status.next.draftDir === contentDir(vault, 'youtube', 'agent', 'Script', title), 'the script goes in Youtube/Script')
 
   const newsletterNext = parseOut(runCli(['next', '--title', title, '--channel', 'newsletter'], vault))
   assert(newsletterNext.next.asset === 'thumbnail', 'channel next continues with the thumbnail brief')
-  assert(newsletterNext.next.draftDir === agentNewsletter, 'agents draft in the agent folder')
-  assert(newsletterNext.next.designDir === designDir(vault, title), 'visuals go to outputs/agent/design/')
+  assert(newsletterNext.next.draftDir === contentDir(vault, 'newsletter', 'agent', 'Design brief', title), 'briefs go in Design brief')
+  assert(newsletterNext.next.designDir === designDir(vault, title), 'renders go to outputs/agent/design/')
 
-  const youtube = contentDir(vault, 'youtube', 'agent', title)
+  const youtube = contentDir(vault, 'youtube', 'agent', 'Script', title)
   fs.mkdirSync(youtube, { recursive: true })
   fs.writeFileSync(path.join(youtube, 'Script.md'), 'script\n')
   const afterScript = parseOut(runCli(['next', '--title', title], vault))
@@ -737,20 +840,26 @@ function selfTest() {
   fs.writeFileSync(path.join(youtube, 'titles.md'), 'titles\n')
   fs.writeFileSync(path.join(youtube, 'description.md'), 'description\n')
   const afterYoutube = parseOut(runCli(['next', '--title', title], vault))
-  assert(afterYoutube.next.channel === 'linkedin' && afterYoutube.next.asset === 'post', 'finished YouTube required assets move to LinkedIn')
+  assert(afterYoutube.next.channel === 'linkedin' && afterYoutube.next.asset === 'post', 'the optional Short is skipped by default')
+
+  const short = parseOut(runCli(['next', '--title', title, '--channel', 'youtube-short'], vault))
+  assert(short.next.action === 'no-writer', 'the Short has no writer yet')
+  assert(short.next.draftDir === contentDir(vault, 'youtube-short', 'agent', 'Script', title), 'the Short goes in Youtube short/Script')
 
   const carousel = parseOut(runCli(['next', '--title', title, '--channel', 'linkedin', '--asset', 'carousel'], vault))
   assert(carousel.next.asset === 'carousel' && carousel.next.action === 'write', 'a named asset can be requested on its own')
-  assert(!fs.existsSync(contentDir(vault, 'linkedin', 'agent', title)), 'requesting an asset must not create the draft')
+  assert(carousel.next.draftDir === contentDir(vault, 'linkedin', 'agent', 'Design brief', title), 'the carousel brief goes in Linkedin/Design brief')
+  assert(!fs.existsSync(carousel.next.draftDir), 'requesting an asset must not create the draft')
 
-  const linkedin = contentDir(vault, 'linkedin', 'human', 'How to design with AI 1')
-  fs.mkdirSync(linkedin, { recursive: true })
-  fs.writeFileSync(path.join(linkedin, 'How to design with AI.md'), 'LINKEDIN\n')
+  const humanLinkedin = contentDir(vault, 'linkedin', 'human', 'Text', 'How to design with AI 1')
+  fs.mkdirSync(humanLinkedin, { recursive: true })
+  fs.writeFileSync(path.join(humanLinkedin, 'How to design with AI.md'), 'LINKEDIN\n')
   const link = parseOut(runCli(['link', '--title', title, '--channel', 'linkedin', '--folder', 'How to design with AI 1'], vault))
   assert(link.ok && link.sides.includes('human'), 'link finds a human folder')
-  assert(fs.readFileSync(path.join(linkedin, 'How to design with AI.md'), 'utf8') === 'LINKEDIN\n', 'link must not change the draft')
+  assert(fs.readFileSync(path.join(humanLinkedin, 'How to design with AI.md'), 'utf8') === 'LINKEDIN\n', 'link must not change the draft')
   const linked = parseOut(runCli(['status', '--title', title], vault))
-  assert(linked.channels.linkedin.assets.post.status === 'present', 'linked folder counts')
+  assert(linked.channels.linkedin.assets.post.status === 'present', 'a linked human post counts')
+  assert(linked.channels.linkedin.assets.carousel.status === 'missing', 'a post in Text is not a carousel')
 
   const skipped = parseOut(runCli(['skip', '--title', title, '--channel', 'x'], vault))
   assert(skipped.skipped.includes('x/article'), 'skip records the channel')
@@ -768,8 +877,8 @@ function selfTest() {
   assert(fs.readFileSync(samyDraft, 'utf8') === 'SAMY DRAFT\n', 'publish leaves the human file in place')
   const publishedStatus = parseOut(runCli(['status', '--title', title], vault))
   assert(publishedStatus.channels.newsletter.stage === 'published', 'published issue shows as published')
-  assert(readJson(path.join(agentNewsletter, 'waterfall.json')).notes === 'keep this', 'notes survive publish')
-  assert(readJson(path.join(agentNewsletter, 'waterfall.json')).skipped.includes('x/article'), 'skips survive publish')
+  assert(readJson(path.join(agentResearch, 'waterfall.json')).notes === 'keep this', 'notes survive publish')
+  assert(readJson(path.join(agentResearch, 'waterfall.json')).skipped.includes('x/article'), 'skips survive publish')
   const again = parseOut(runCli(['publish', '--title', title, '--channel', 'newsletter', '--yes'], vault))
   assert(again.already === true, 'a second publish is a no-op')
 
@@ -777,13 +886,22 @@ function selfTest() {
   assert(badTitle.status === 1, 'path titles are rejected')
   assert(fs.readFileSync(path.join(vault, 'raw', 'me', 'proof.md'), 'utf8') === 'proof\n', 'raw/ stays untouched')
 
-  let humanRefused = false
-  try {
-    assertContentWrite(vault, path.join(humanNewsletter, 'x.md'))
-  } catch {
-    humanRefused = true
+  const refusedWrites = [
+    path.join(humanNewsletter, 'x.md'),
+    path.join(vault, 'outputs', 'agent', 'content', 'linkedin', title, 'post.md'),
+    path.join(vault, 'outputs', 'agent', 'content', 'Linkedin', 'Script', title, 'post.md'),
+    path.join(stageRoot(vault, 'linkedin', 'agent', 'Text'), 'post.md'),
+  ]
+  for (const target of refusedWrites) {
+    let refusedWrite = false
+    try {
+      assertContentWrite(vault, target)
+    } catch {
+      refusedWrite = true
+    }
+    assert(refusedWrite, `write must be refused: ${path.relative(vault, target)}`)
   }
-  assert(humanRefused, 'outputs/human/ is not writable')
+  assertContentWrite(vault, path.join(contentDir(vault, 'x', 'agent', 'Text', title), 'article.md'))
 
   const missing = runCli(['status', '--title', title], path.join(vault, 'missing-vault'))
   assert(missing.status === 2, 'a missing vault is a distinct error')
@@ -798,6 +916,7 @@ function main() {
     if (command === 'help') help()
     if (command === 'self-test') selfTest()
     const vault = resolveVaultPath()
+    if (command === 'scaffold') commandScaffold(vault)
     const title = command === 'paths' && !args.title ? null : assertTitle(args.title)
     if (command === 'paths') commandPaths(vault, title)
     if (command === 'status') commandStatus(vault, title, { write: Boolean(args.write) })

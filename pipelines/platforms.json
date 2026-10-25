@@ -1,8 +1,13 @@
 {
-  "order": ["newsletter", "youtube", "linkedin", "x"],
-  "manifest": "waterfall.json",
+  "order": ["newsletter", "youtube", "youtube-short", "linkedin", "x"],
+  "manifest": {
+    "channel": "newsletter",
+    "stage": "Research",
+    "file": "waterfall.json"
+  },
   "brief": {
     "channel": "newsletter",
+    "stage": "Research",
     "file": "brief.md"
   },
   "platforms": {
@@ -12,6 +17,7 @@
         {
           "id": "issue",
           "label": "Newsletter issue",
+          "stage": "Text",
           "required": true,
           "files": ["issue.md"],
           "acceptPrimaryMarkdown": true,
@@ -19,14 +25,15 @@
         },
         {
           "id": "thumbnail",
-          "label": "Email thumbnail",
+          "label": "Newsletter thumbnail brief",
+          "stage": "Design brief",
           "required": false,
           "files": ["thumbnail-brief.md"],
           "acceptPrimaryMarkdown": false,
           "handsTo": {
             "skill": "newsletter-thumbnail-designer",
             "canvas": "420x300",
-            "render": "Write thumbnail-brief.md. Design OS builds it: pnpm dev in $DESIGN_SYSTEM, then Export → Download PNG. With the server up: GET /api/export/png?mode=<modeKey>. Save $VAULT/outputs/agent/design/<title>/newsletter-thumbnail.png. Do not call render.py."
+            "render": "Write Newsletter/Design brief/<title>/thumbnail-brief.md. Design OS builds it: pnpm dev in $DESIGN_SYSTEM, then Export → Download PNG. With the server up: GET /api/export/png?mode=<modeKey>. Save $VAULT/outputs/agent/design/<title>/newsletter-thumbnail.png. Do not call render.py."
           }
         }
       ]
@@ -37,6 +44,7 @@
         {
           "id": "script",
           "label": "YouTube script",
+          "stage": "Script",
           "required": true,
           "files": ["script.md", "Script.md"],
           "acceptPrimaryMarkdown": true,
@@ -45,6 +53,7 @@
         {
           "id": "titles",
           "label": "YouTube titles",
+          "stage": "Script",
           "required": true,
           "files": ["titles.md"],
           "acceptPrimaryMarkdown": false,
@@ -53,6 +62,7 @@
         {
           "id": "description",
           "label": "YouTube description",
+          "stage": "Script",
           "required": true,
           "files": ["description.md"],
           "acceptPrimaryMarkdown": false,
@@ -60,15 +70,30 @@
         },
         {
           "id": "thumbnail",
-          "label": "YouTube thumbnail concept",
+          "label": "YouTube thumbnail brief",
+          "stage": "Design brief",
           "required": false,
           "files": ["thumbnail-brief.md"],
           "acceptPrimaryMarkdown": false,
           "handsTo": {
             "skill": "youtube-thumbnail",
             "canvas": "1280x720 brief only. The design system has no YouTube thumbnail canvas yet.",
-            "render": "Write the brief into thumbnail-brief.md. Do not use newsletter-thumbnail-designer."
+            "render": "Write the brief into Youtube/Design brief/<title>/thumbnail-brief.md. Do not use newsletter-thumbnail-designer."
           }
+        }
+      ]
+    },
+    "youtube-short": {
+      "writer": null,
+      "assets": [
+        {
+          "id": "script",
+          "label": "YouTube Short script",
+          "stage": "Script",
+          "required": false,
+          "files": ["short-script.md"],
+          "acceptPrimaryMarkdown": true,
+          "handsTo": null
         }
       ]
     },
@@ -78,18 +103,16 @@
         {
           "id": "post",
           "label": "LinkedIn post",
+          "stage": "Text",
           "required": true,
           "files": ["post.md"],
           "acceptPrimaryMarkdown": true,
-          "handsTo": {
-            "skill": "infographics-designer",
-            "canvas": "1080x1350, only when the post needs a graphic",
-            "render": "graphics-designer chooses, infographics-designer builds. pnpm dev in $DESIGN_SYSTEM, Export → Download PNG, or GET /api/export/png?mode=<modeKey>. Save $VAULT/outputs/agent/design/<title>/linkedin-infographic.png. Do not call render.py."
-          }
+          "handsTo": null
         },
         {
           "id": "hooks",
           "label": "LinkedIn hooks",
+          "stage": "Text",
           "required": false,
           "files": ["hooks.md"],
           "acceptPrimaryMarkdown": false,
@@ -97,15 +120,29 @@
           "handsTo": null
         },
         {
+          "id": "infographic",
+          "label": "LinkedIn infographic brief",
+          "stage": "Design brief",
+          "required": false,
+          "files": ["infographic-brief.md"],
+          "acceptPrimaryMarkdown": false,
+          "handsTo": {
+            "skill": "infographics-designer",
+            "canvas": "1080x1350, only when the post needs a graphic",
+            "render": "graphics-designer writes Linkedin/Design brief/<title>/infographic-brief.md, infographics-designer builds. pnpm dev in $DESIGN_SYSTEM, Export → Download PNG, or GET /api/export/png?mode=<modeKey>. Save $VAULT/outputs/agent/design/<title>/linkedin-infographic.png. Do not call render.py."
+          }
+        },
+        {
           "id": "carousel",
           "label": "LinkedIn carousel",
+          "stage": "Design brief",
           "required": false,
           "files": ["carousel.md"],
           "acceptPrimaryMarkdown": false,
           "handsTo": {
             "skill": "carousel-designer",
             "canvas": "1080x1350 per slide",
-            "render": "carousel.md is the brief. pnpm dev in $DESIGN_SYSTEM, Export → Download PDF, or GET /api/export/pdf?mode=<modeKey>. Save $VAULT/outputs/agent/design/<title>/linkedin-carousel.pdf. Do not call render.py."
+            "render": "Linkedin/Design brief/<title>/carousel.md is the brief. pnpm dev in $DESIGN_SYSTEM, Export → Download PDF, or GET /api/export/pdf?mode=<modeKey>. Save $VAULT/outputs/agent/design/<title>/linkedin-carousel.pdf. Do not call render.py."
           }
         }
       ]
@@ -116,18 +153,29 @@
         {
           "id": "article",
           "label": "X Article",
+          "stage": "Text",
           "required": true,
           "files": ["article.md"],
           "acceptPrimaryMarkdown": true,
+          "handsTo": null
+        },
+        {
+          "id": "figures",
+          "label": "X Article cover and figures brief",
+          "stage": "Design brief",
+          "required": false,
+          "files": ["figures-brief.md"],
+          "acceptPrimaryMarkdown": false,
           "handsTo": {
             "skill": "graphics-designer",
             "canvas": "Cover and inline figures",
-            "render": "graphics-designer routes each figure to infographics-designer or carousel-designer. Save the cover and numbered inline images in $VAULT/outputs/agent/design/<title>/ as x-01-cover.png, x-02-…. Do not call render.py."
+            "render": "graphics-designer writes X/Design brief/<title>/figures-brief.md and routes each figure to infographics-designer or carousel-designer. Save the cover and numbered inline images in $VAULT/outputs/agent/design/<title>/ as x-01-cover.png, x-02-…. Do not call render.py."
           }
         },
         {
           "id": "thread",
           "label": "X thread",
+          "stage": "Text",
           "required": false,
           "files": ["thread.md"],
           "acceptPrimaryMarkdown": false,
@@ -136,6 +184,7 @@
         {
           "id": "post",
           "label": "X post",
+          "stage": "Text",
           "required": false,
           "files": ["post.md"],
           "acceptPrimaryMarkdown": false,

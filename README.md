@@ -1,6 +1,6 @@
 # Smart Content System
 
-The Content OS of Samy's Smart OS. Platform copywriting skills, one content waterfall, and the design briefs for Samy's content: **The Smart Creator** newsletter, YouTube, LinkedIn and X. Grok Bot orchestrates. Claude Code, Codex, or Cursor do the work.
+The Content OS of Samy's Smart OS. Platform copywriting skills, one content waterfall, and the design briefs for Samy's content: **The Smart Creator** newsletter, YouTube, YouTube Shorts, LinkedIn and X. Grok Bot orchestrates. Claude Code, Codex, or Cursor do the work.
 
 Visuals are built by Design OS, the [Smart design system](https://github.com/SamyGenAI/Smart-design-system). This repo writes the brief, Design OS renders it.
 
@@ -14,7 +14,13 @@ git clone https://github.com/SamyGenAI/Smart-design-system.git ../smart-design-s
 cp .env.example .env
 ```
 
-Do not copy vault files into this repo. Do not edit the vault's `raw/` or `outputs/human/`. If `voice.md`, `proof.md` or `offer.md` are empty, fill them in the vault before asking an agent to draft. Agents will not invent voice, proof, or numbers.
+Then create the vault's agent folders and check the MCP servers: Exa is in [`.mcp.json`](.mcp.json); Notion, Gmail and vidIQ come from your Claude.ai connectors.
+
+```bash
+node scripts/content-waterfall.mjs scaffold
+claude mcp list
+```
+ Do not copy vault files into this repo. Do not edit the vault's `raw/` or `outputs/human/`. If `voice.md`, `proof.md` or `offer.md` are empty, fill them in the vault before asking an agent to draft. Agents will not invent voice, proof, or numbers.
 
 ## Structure
 
@@ -29,9 +35,9 @@ Do not copy vault files into this repo. Do not edit the vault's `raw/` or `outpu
 
 | Path | Who writes it |
 |---|---|
-| `outputs/agent/content/<channel>/<title>/` | Agents: drafts, briefs, `waterfall.json` |
+| `outputs/agent/content/<Platform>/<Stage>/<title>/` | Agents: research, drafts, design briefs, `waterfall.json` |
 | `outputs/agent/design/<title>/` | Design OS: rendered visuals |
-| `outputs/human/content/<channel>/<title>/` | Samy only: the polished, final version |
+| `outputs/human/content/<Platform>/<Stage>/<title>/` | Samy only: the polished, final version |
 
 ## The waterfall
 
@@ -39,7 +45,8 @@ Do not copy vault files into this repo. Do not edit the vault's `raw/` or `outpu
 node scripts/content-waterfall.mjs status --title "<title>"
 node scripts/content-waterfall.mjs next --title "<title>"
 node scripts/content-waterfall.mjs publish --title "<title>" --channel newsletter --yes
+node scripts/content-waterfall.mjs scaffold
 node scripts/content-waterfall.mjs self-test
 ```
 
-`next` names the writer, the file, the agent folder, and the design handoff for that asset. A file Samy already polished in `outputs/human/` counts. `publish` refuses without `--yes` and without Samy's human folder, records the date, and moves nothing.
+`next` names the writer, the file, the stage, the agent folder (`draftDir`), and the design handoff for that asset. A file Samy already polished in `outputs/human/` counts. `publish` refuses without `--yes` and without Samy's human folder, records the date, and moves nothing.
