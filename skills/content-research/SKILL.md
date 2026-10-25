@@ -62,7 +62,7 @@ Restate the idea in one line. Then:
 ## Step 2: Social listening input
 
 - **Weekly digest.** In Gmail, search `subject:"Social Listening Digest"` and open the most recent thread. Pull what bears on this topic: discussions, pain points, notable posts, data points, tools. If nothing relates, keep the top 2 or 3 trends as context. If the latest digest is over 14 days old, say so.
-- **Tailored pass.** When the digest is stale, off-topic, or Samy asks, run `social-listening` in query mode on this topic only, with the sources that fit (X, Reddit, YouTube, Web, LinkedIn). It lives in the GTM OS repo for now and moves to Content OS. If it is not available in this session, say so and continue with the digest alone.
+- **Tailored pass.** When the digest is stale, off-topic, or Samy asks, run `social-listening` in query mode on this topic only, with the sources that fit (X, Reddit, YouTube, Web, LinkedIn). If it is not available in this session, say so and continue with the digest alone.
 
 ## Step 3: Deep research with subagents
 

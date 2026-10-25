@@ -61,7 +61,7 @@ MCP servers for this repo are in [`.mcp.json`](.mcp.json). Claude.ai connectors 
 | vidIQ | `youtube-title-outlier-packaging`, `youtube-writer`: outliers, trends, channel stats | Claude.ai connector (directory version, read-only) |
 | Exa | `content-research` web track, fact checks in every writer | `exa` in `.mcp.json` |
 | X | `content-research` X track | Grok's built-in X search, through the Content researcher bot. Fallback: `social-listening` |
-| `social-listening` | `content-research`: tailored listening pass, communities track (Reddit, X, YouTube, Web, LinkedIn) | Skill in the GTM OS repo for now, moving to Content OS |
+| `social-listening` | `content-research`: tailored listening pass, communities track (Reddit, X, YouTube, Web, LinkedIn, Gmail newsletters) | `skills/social-listening`, script `scripts/signals/social-listening.py`, watchlist `context/signals/watchlist.md`. Keys in `.env`, see `.env.example` |
 | Tella | Recording, transcripts, YouTube editing | Claude.ai connector |
 | Canva, Figma | Design OS refinement | Claude.ai connectors |
 
@@ -74,6 +74,7 @@ Codex and Cursor do not read `.mcp.json` or Claude.ai connectors. Add the server
 | `content-waterfall` | Which asset comes next, idea to publish |
 | `content-research` | Ideas with proof of heat, or one idea into one brief for every platform. Run by the Content researcher bot |
 | `content-calendar` | Read the Notion content calendar, and update it when Samy asks |
+| `social-listening` | What the watchlist and the web are saying, by source. `/social-listening` |
 | `newsletter-writer`, `youtube-writer`, `linkedin-writer`, `x-writer` | The four platform writers |
 | `linkedin-copywriter`, `linkedin-hook-writer`, `linkedin-unibox-reply` | LinkedIn body, hooks, DM replies |
 | `youtube-title-outlier-packaging`, `youtube-description` | YouTube packaging |
@@ -85,7 +86,6 @@ Codex and Cursor do not read `.mcp.json` or Claude.ai connectors. Add the server
 
 ## Still to build
 
-- Move `social-listening` from the GTM OS into this repo
 - YouTube Short writer
 - One design brief skill per format: infographic, carousel, thumbnail, motion graphics
 - Analytics: read the performance of past posts per platform

@@ -20,7 +20,10 @@ Then create the vault's agent folders and check the MCP servers: Exa is in [`.mc
 node scripts/content-waterfall.mjs scaffold
 claude mcp list
 ```
- Do not copy vault files into this repo. Do not edit the vault's `raw/` or `outputs/human/`. If `voice.md`, `proof.md` or `offer.md` are empty, fill them in the vault before asking an agent to draft. Agents will not invent voice, proof, or numbers.
+
+`social-listening` runs on Python 3 and needs `yt-dlp` for its YouTube source (`pip install yt-dlp`). Its API keys are listed in `.env.example`.
+
+Do not copy vault files into this repo. Do not edit the vault's `raw/` or `outputs/human/`. If `voice.md`, `proof.md` or `offer.md` are empty, fill them in the vault before asking an agent to draft. Agents will not invent voice, proof, or numbers.
 
 ## Structure
 
