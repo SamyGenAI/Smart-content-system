@@ -17,14 +17,15 @@ rows of each source, with the rest offered below it. No file is written.
 
 ## Sources
 
-Five run through one script, `scripts/signals/social-listening.py`, with
-`--source`. **Gmail is the exception — it has no script**, and is read with the
-Gmail MCP tools directly:
+Four run through one script, `scripts/signals/social-listening.py`, with
+`--source`. **Gmail and X are the exceptions — they have no script.** Gmail is
+read with the Gmail MCP tools directly. X is read with the Grok bot's built-in
+X search, never with the xAI API and never with `--source x`:
 
 | Source | Cost | Needs |
 |---|---|---|
 | `linkedin` | bills per post scraped | `APIFY_API_KEY` |
-| `x` | one API call per run, `-n` is ~free | `X_API_KEY` |
+| `x` | free — the Grok bot's built-in X search | running inside a Grok bot |
 | `reddit` | free — no key, no credits | nothing |
 | `youtube` | free — no key, no credits | `yt-dlp` installed; `GEMINI_API_KEY` optional |
 | `web` | free keyless, or one API call per query | nothing, or a search key |
@@ -84,8 +85,6 @@ that into the same AskUserQuestion rather than asking twice.
 
 ```bash
 python scripts/signals/social-listening.py --source linkedin -d 7 -n 25 --per-source 10
-python scripts/signals/social-listening.py --source x -d 7 -n 25
-python scripts/signals/social-listening.py --source x -q "AI ghostwriting pricing"
 python scripts/signals/social-listening.py --source reddit -d 7 -n 25 --enrich 5
 python scripts/signals/social-listening.py --source reddit -q "linkedin ghostwriting pricing"
 python scripts/signals/social-listening.py --source youtube -d 30 -n 15 --per-source 8 --enrich 3
@@ -110,9 +109,11 @@ fetching, so narrowing it saves nothing — lower `--per-source` instead.
 long. Read the stderr lines: a profile returning nothing means unreachable or
 inactive, never "quiet".
 
-**X** — `-q` researches a topic across all of X (no watchlist needed); with a
-watchlist it narrows that topic to those accounts. Takes ~2 minutes, one call
-regardless of `-n`. Caps at 20 handles.
+**X** — no script. Inside a Grok bot, use its built-in X search: a topic
+researches all of X (no watchlist needed); the `## X` accounts narrow it to
+those handles. Shape the results into the same `signals` fields as the other
+sources. Outside a Grok bot, X is not offered: say once that X runs from the
+Grok bots and continue with the other sources.
 
 **Reddit** — free, so run it freely; the only cost is time. Requests are paced
 ~2s apart to stay under Reddit's rate limit, so a five-subreddit run takes a

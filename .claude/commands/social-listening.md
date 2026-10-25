@@ -6,7 +6,7 @@ Read `skills/social-listening/SKILL.md` and follow it to check social listening 
 
 User's instructions or sources to check: $ARGUMENTS
 
-Sources: `linkedin` (bills per post), `x` (one API call), `reddit` (free),
+Sources: `linkedin` (bills per post), `x` (the Grok bot's built-in X search, no script), `reddit` (free),
 `youtube` (free, needs yt-dlp — transcripts + comments, ranked newest first;
 Gemini reads the caption-less videos when GEMINI_API_KEY is set),
 `web` (free keyless, or a search API key if one is set — ranked newest first),

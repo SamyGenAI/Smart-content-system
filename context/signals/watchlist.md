@@ -28,9 +28,8 @@ Nate Herk: https://www.linkedin.com/in/nateherkelman
 
 ## X
 
-> Read by `scripts/signals/social-listening.py --source x` (xAI Grok
-> `x_search`). One API call per run, so lines here are cheap — but the tool
-> accepts at most 20 accounts and extras are dropped with a warning.
+> Read by the Grok bots' built-in X search, not by the script and never with
+> the xAI API. Keep it to 20 accounts or fewer.
 >
 > Either shape works: `Name: https://x.com/handle` or `Name: handle`.
 
@@ -45,13 +44,19 @@ Aakash Gupta: https://x.com/aakashgupta
 >
 > Just the subreddit, no `Name:` prefix. `r/` optional.
 
-r/gtmengineering
-r/sales
-r/SaaS
+r/content_marketing
+r/NewTubers
 r/artificial
-r/ClaudeCode
 r/ArtificialInteligence
+r/ClaudeAI
+r/ClaudeCode
 r/codex
+r/AI_Agents
+r/ObsidianMD
+r/grok
+
+> Meta Muse and Instinct have no subreddit yet: search them with
+> `--source reddit -q "Meta Muse"` and `-q "Instinct AI"`.
 
 
 ## YouTube

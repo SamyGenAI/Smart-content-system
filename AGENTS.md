@@ -60,8 +60,8 @@ MCP servers for this repo are in [`.mcp.json`](.mcp.json). Claude.ai connectors 
 | Gmail | `content-research`: the weekly Social Listening Digest | Claude.ai connector |
 | vidIQ | `youtube-title-outlier-packaging`, `youtube-writer`: outliers, trends, channel stats | Claude.ai connector (directory version, read-only) |
 | Exa | `content-research` web track, fact checks in every writer | `exa` in `.mcp.json` |
-| X | `content-research` X track | Grok's built-in X search, through the Content researcher bot. Fallback: `social-listening` |
-| `social-listening` | `content-research`: tailored listening pass, communities track (Reddit, X, YouTube, Web, LinkedIn, Gmail newsletters) | `skills/social-listening`, script `scripts/signals/social-listening.py`, watchlist `context/signals/watchlist.md`. Keys in `.env`, see `.env.example` |
+| X | `content-research` X track | Grok's built-in X search, through the Grok bots. Never the xAI API |
+| `social-listening` | `content-research`: tailored listening pass, communities track (Reddit, YouTube, Web, LinkedIn, Gmail newsletters; X through the Grok bots) | `skills/social-listening`, script `scripts/signals/social-listening.py`, watchlist `context/signals/watchlist.md`. Keys in `.env`, see `.env.example` |
 | Tella | Recording, transcripts, YouTube editing | Claude.ai connector |
 | Canva, Figma | Design OS refinement | Claude.ai connectors |
 

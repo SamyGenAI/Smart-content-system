@@ -27,7 +27,7 @@ The **Content researcher bot** orchestrates this skill. It has its own X access 
 |---|---|---|
 | Web landscape and facts | Exa (`web_search_exa`, `web_fetch_exa`) | Built-in web search |
 | YouTube | vidIQ connector ("Use vidIQ to…"): outliers, trends, competitor channels, comments | `youtube-title-outlier-packaging` manual method |
-| X | Grok's built-in X search, through the bot | `social-listening`, X source |
+| X | Grok's built-in X search, through the bot | Exa on x.com, and say the X track ran without Grok |
 | Communities | `social-listening` in query mode, Reddit and Web sources | Exa on reddit.com and forums |
 | Samy's own corpus | The vault, Notion (`content-calendar`), his Substack | |
 | Social listening | Latest Social Listening Digest in Gmail | A tailored `social-listening` pass, see Step 2 |
