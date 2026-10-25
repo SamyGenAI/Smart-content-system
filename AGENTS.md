@@ -60,8 +60,8 @@ MCP servers for this repo are in [`.mcp.json`](.mcp.json). Claude.ai connectors 
 | Gmail | `content-research`: the weekly Social Listening Digest | Claude.ai connector |
 | vidIQ | `youtube-title-outlier-packaging`, `youtube-writer`: outliers, trends, channel stats | Claude.ai connector (directory version, read-only) |
 | Exa | `content-research` web track, fact checks in every writer | `exa` in `.mcp.json` |
-| X | `content-research` X track | Grok's built-in X search, through the Content researcher bot. Fallback: `last30days` |
-| `last30days` | `content-research` communities track (Reddit, Hacker News, X) | Claude Code skill |
+| X | `content-research` X track | Grok's built-in X search, through the Content researcher bot. Fallback: `social-listening` |
+| `social-listening` | `content-research`: tailored listening pass, communities track (Reddit, X, YouTube, Web, LinkedIn) | Skill in the GTM OS repo for now, moving to Content OS |
 | Tella | Recording, transcripts, YouTube editing | Claude.ai connector |
 | Canva, Figma | Design OS refinement | Claude.ai connectors |
 
@@ -85,7 +85,7 @@ Codex and Cursor do not read `.mcp.json` or Claude.ai connectors. Add the server
 
 ## Still to build
 
-- Social listening skill
+- Move `social-listening` from the GTM OS into this repo
 - YouTube Short writer
 - One design brief skill per format: infographic, carousel, thumbnail, motion graphics
 - Analytics: read the performance of past posts per platform

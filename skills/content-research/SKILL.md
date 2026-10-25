@@ -27,10 +27,10 @@ The **Content researcher bot** orchestrates this skill. It has its own X access 
 |---|---|---|
 | Web landscape and facts | Exa (`web_search_exa`, `web_fetch_exa`) | Built-in web search |
 | YouTube | vidIQ connector ("Use vidIQ to…"): outliers, trends, competitor channels, comments | `youtube-title-outlier-packaging` manual method |
-| X | Grok's built-in X search, through the bot | `last30days` (X source), then Exa on x.com |
-| Communities | `last30days` (Reddit, Hacker News, YouTube comments, GitHub) | Exa on reddit.com and forums |
+| X | Grok's built-in X search, through the bot | `social-listening`, X source |
+| Communities | `social-listening` in query mode, Reddit and Web sources | Exa on reddit.com and forums |
 | Samy's own corpus | The vault, Notion (`content-calendar`), his Substack | |
-| Social listening | Latest Social Listening Digest in Gmail | A tailored social listening pass, see Step 2 |
+| Social listening | Latest Social Listening Digest in Gmail | A tailored `social-listening` pass, see Step 2 |
 
 If a tool is missing or not signed in, say which track ran without it. Never fill a track with guesses.
 
@@ -62,7 +62,7 @@ Restate the idea in one line. Then:
 ## Step 2: Social listening input
 
 - **Weekly digest.** In Gmail, search `subject:"Social Listening Digest"` and open the most recent thread. Pull what bears on this topic: discussions, pain points, notable posts, data points, tools. If nothing relates, keep the top 2 or 3 trends as context. If the latest digest is over 14 days old, say so.
-- **Tailored pass.** When the digest is stale, off-topic, or Samy asks, run a social listening pass on this topic only: `social-listening` with the topic once that skill exists, until then `last30days` with the topic and the last 30 days.
+- **Tailored pass.** When the digest is stale, off-topic, or Samy asks, run `social-listening` in query mode on this topic only, with the sources that fit (X, Reddit, YouTube, Web, LinkedIn). It lives in the GTM OS repo for now and moves to Content OS. If it is not available in this session, say so and continue with the digest alone.
 
 ## Step 3: Deep research with subagents
 
@@ -127,7 +127,7 @@ If Notion is unavailable, save to the vault and say the card was not updated.
 
 ## Ideas mode
 
-1. **Read the demand.** The latest Social Listening Digest, YouTube outliers and trends in the niche (vidIQ), X posts going above normal, community questions (`last30days`), and last month's posted pieces with their results if Samy shared them.
+1. **Read the demand.** The latest Social Listening Digest, YouTube outliers and trends in the niche (vidIQ), X posts going above normal, community questions (`social-listening`), and last month's posted pieces with their results if Samy shared them.
 2. **Read the backlog.** Every **Idea** card in the calendar (`content-calendar`). Prefer upgrading an existing idea over adding a new one, and say which card it is.
 3. **The slate.** 3 to 5 ideas. For each: the one-line idea, the reader, proof of heat (links: outliers, posts, threads, digest lines), the gap, a contrarian take if one exists, the pillar from `$VAULT/wiki/`, the funnel job, and what he can show on camera. Prefer ideas with more demand than supply. Score each with the five criteria from Step 4.
 4. **Save.** `$VAULT/outputs/agent/content/Newsletter/Research/Ideas YYYY-MM-DD/ideas.md`. Show the slate in chat.
