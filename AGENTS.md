@@ -60,7 +60,7 @@ MCP servers for this repo are in [`.mcp.json`](.mcp.json). Claude.ai connectors 
 | Gmail | `content-research`: the weekly Social Listening Digest | Claude.ai connector |
 | vidIQ | `youtube-title-outlier-packaging`, `youtube-writer`: outliers, trends, channel stats | Claude.ai connector (directory version, read-only) |
 | Exa | `content-research` web track, fact checks in every writer | `exa` in `.mcp.json` |
-| X | `content-research` X track | The Content researcher bot's own X access. Fallback: `last30days` |
+| X | `content-research` X track | Grok's built-in X search, through the Content researcher bot. Fallback: `last30days` |
 | `last30days` | `content-research` communities track (Reddit, Hacker News, X) | Claude Code skill |
 | Tella | Recording, transcripts, YouTube editing | Claude.ai connector |
 | Canva, Figma | Design OS refinement | Claude.ai connectors |

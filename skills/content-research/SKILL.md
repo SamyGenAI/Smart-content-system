@@ -21,13 +21,13 @@ Research, structure and bullets only. Never write the newsletter prose here: tha
 
 ## Who runs it
 
-The **Content researcher bot** orchestrates this skill. It has its own X and YouTube access. When it passes X or YouTube data in (pasted, or as files), use that data and do not fetch that track again. Otherwise fetch it with the tools below.
+The **Content researcher bot** orchestrates this skill. It has its own X access (Grok's built-in X search) and YouTube access. When it passes X or YouTube data in (pasted, or as files), use that data and do not fetch that track again. Otherwise fetch it with the tools below.
 
 | Track | Tool, in order of preference | If missing |
 |---|---|---|
 | Web landscape and facts | Exa (`web_search_exa`, `web_fetch_exa`) | Built-in web search |
 | YouTube | vidIQ connector ("Use vidIQ to…"): outliers, trends, competitor channels, comments | `youtube-title-outlier-packaging` manual method |
-| X | The bot's X access | `last30days` (X source), then Exa on x.com |
+| X | Grok's built-in X search, through the bot | `last30days` (X source), then Exa on x.com |
 | Communities | `last30days` (Reddit, Hacker News, YouTube comments, GitHub) | Exa on reddit.com and forums |
 | Samy's own corpus | The vault, Notion (`content-calendar`), his Substack | |
 | Social listening | Latest Social Listening Digest in Gmail | A tailored social listening pass, see Step 2 |
